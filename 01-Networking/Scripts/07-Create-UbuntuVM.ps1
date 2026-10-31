@@ -1,0 +1,66 @@
+# Virtual machine configuration
+$VMName = 'vm-ubuntu01'
+$VMSize = 'Standard_B2ts_v2'
+$Location = 'eastus2'
+
+# Resource configuration
+$ResourceGroupName = 'rg-network-workload'
+$VirtualNetworkName = 'vnet-workload'
+$SubnetName = 'snet-workload'
+
+# Network configuration
+$NICName = 'nic-ubuntu01'
+$PrivateIPAddress = '10.1.0.5'
+
+# Operating system configuration
+$PublisherName = 'Canonical'
+$Offer = 'ubuntu-24_04-lts'
+$SKU = 'server'
+$Version = 'latest'
+
+# Disk configuration
+$OSDiskName = 'osdisk-ubuntu01'
+$OSDiskType = 'StandardSSD_LRS'
+
+# Retrieve virtual network configuration
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+
+# Retrieve subnet configuration
+$Subnet = Get-AzVirtualNetworkSubnetConfig -VirtualNetwork $VirtualNetwork -Name $SubnetName
+
+# Create network interface
+$NetworkInterface = New-AzNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupName -Location $Location -SubnetId $subnet.Id -PrivateIpAddress $PrivateIPAddress
+
+# Create VM credentials
+$Username = 'hamza'
+$Password = Read-Host -Prompt 'Enter the local administrator password' -AsSecureString
+$Credential = [System.Management.Automation.PSCredential]::new($Username, $Password)
+
+# Configure virtual machine
+$VMConfig = New-AzVMConfig -VMName $VMName -VMSize $VMSize
+
+# Disable Boot Diagnostics
+Set-AzVMBootDiagnostic -VM $VMConfig -Disable
+
+# Configure operating system and authentication
+Set-AzVMOperatingSystem -VM $VMConfig -ComputerName $VMName -Credential $Credential -Linux
+
+# Configure source image
+Set-AzVMSourceImage -VM $VMConfig -PublisherName $PublisherName -Offer $Offer -Skus $SKU -Version $Version
+
+# Configure OS disk
+Set-AzVMOSDisk -VM $VMConfig -Name $OSDiskName -CreateOption FromImage -StorageAccountType $OSDiskType
+
+# Attach network interface
+$VirtualMachine = Add-AzVMNetworkInterface -VM $VMConfig -Id $NetworkInterface.Id
+
+# Deploy virtual machine
+New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine
+
+# Verify deployment
+$VirtualMachine = Get-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
+$VirtualMachine | Format-Table Name, Location, ProvisioningState
+
+# Verify network configuration
+$NetworkInterface = Get-AzNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupName
+$NetworkInterface.IpConfigurations | Format-Table Name, PrivateIpAddress, PrivateIpAllocationMethod
