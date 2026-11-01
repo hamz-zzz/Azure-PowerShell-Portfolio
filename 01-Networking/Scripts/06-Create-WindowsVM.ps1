@@ -32,9 +32,7 @@ $Subnet = Get-AzVirtualNetworkSubnetConfig -VirtualNetwork $VirtualNetwork -Name
 $NetworkInterface = New-AzNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupName -Location $Location -SubnetId $subnet.Id -PrivateIpAddress $PrivateIPAddress
 
 # Create VM credentials
-$Username = 'hamza'
-$Password = Read-Host -Prompt 'Enter the local administrator password' -AsSecureString
-$Credential = [System.Management.Automation.PSCredential]::new($Username, $Password)
+$Credential = Get-Credential -Message 'Enter the local administrator credentials for the Azure VM'
 
 # Configure virtual machine
 $VMConfig = New-AzVMConfig -VMName $VMName -VMSize $VMSize

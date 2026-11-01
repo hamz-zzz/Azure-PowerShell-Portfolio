@@ -1,5 +1,5 @@
 # Resource group configuration
-$ResourceGroupNames = ('rg-network-hub', 'rg-network-workload', 'rg-network-security')
+$ResourceGroupNames = ('rg-network-hub', 'rg-network-workload')
 $Location = 'eastus2'
 
 # Create resource groups

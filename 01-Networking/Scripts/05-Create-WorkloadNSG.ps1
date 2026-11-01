@@ -8,7 +8,7 @@ $VirtualNetworkName = 'vnet-workload'
 $SubnetName = 'snet-workload'
 
 # Security rule configuration
-$BastionAddressPrefix = '10.0.0.64/26'
+$BastionAddressPrefix = '10.0.0.128/26'
 $WorkloadAddressPrefix = '10.1.0.0/24'
 
 # Create inbound security rules
@@ -39,5 +39,5 @@ Set-AzVirtualNetwork -VirtualNetwork $WorkloadVNet
 
 # Verify NSG configuration
 Get-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName
-$WorkloadVNet.Subnets | Select-Object Name, AddressPrefix, @{Name='NSG';Expression={$_.NetworkSecurityGroup.Id}}
+$WorkloadVNet.Subnets | Select-Object Name, AddressPrefix, @{Name = 'NSG'; Expression = { $_.NetworkSecurityGroup.Id } }
 (Get-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName).SecurityRules | Format-Table Name, Priority, Direction, Access, Protocol, SourceAddressPrefix, SourcePortRange, DestinationAddressPrefix, DestinationPortRange
