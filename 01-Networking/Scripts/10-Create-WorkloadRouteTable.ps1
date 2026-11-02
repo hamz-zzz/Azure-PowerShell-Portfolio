@@ -17,7 +17,6 @@ $FirewallName = 'azfw-hub'
 $FirewallResourceGroupName = 'rg-network-hub'
 
 # Retrieve Azure Firewall
-# Hint: Get-AzFirewall
 $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $FirewallResourceGroupName
 
 # Retrieve firewall private IP address

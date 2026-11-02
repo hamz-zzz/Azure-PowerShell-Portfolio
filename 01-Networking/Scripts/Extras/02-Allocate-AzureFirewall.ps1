@@ -30,7 +30,6 @@ $ManagementPublicIP = Get-AzPublicIpAddress -Name $ManagementPublicIPName -Resou
 $Firewall.AllocateBasicSku($HubVNet, @($FirewallPublicIP), $ManagementPublicIP)
 
 # Apply updated firewall configuration
-# Hint: Set-AzFirewall -AzureFirewall
 Set-AzFirewall -AzureFirewall $Firewall
 
 # Retrieve updated firewall configuration
@@ -40,7 +39,6 @@ $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroup
 $FirewallPrivateIP = $Firewall.IpConfigurations[0].PrivateIpAddress
 
 # Retrieve workload route table
-# Hint: Get-AzRouteTable
 $RouteTable = Get-AzRouteTable -Name $RouteTableName -ResourceGroupName $RouteTableResourceGroupName
 
 # Retrieve existing route

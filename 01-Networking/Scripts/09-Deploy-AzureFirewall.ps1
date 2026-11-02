@@ -16,7 +16,6 @@ $HubVNet = Get-AzVirtualNetwork -Name $HubVNetName -ResourceGroupName $ResourceG
 $FirewallPublicIP = New-AzPublicIpAddress -Name $FirewallPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
 
 # Create firewall management public IP
-# Hint: New-AzPublicIpAddress
 $ManagementPublicIP = New-AzPublicIpAddress -Name $ManagementPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
 
 # Create Azure Firewall
