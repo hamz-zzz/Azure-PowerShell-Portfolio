@@ -13,6 +13,7 @@ $RouteTableResourceGroupName = 'rg-network-workload'
 # Public IP configuration
 $FirewallPublicIPName = 'pip-azfw-hub'
 $ManagementPublicIPName = 'pip-azfw-management-hub'
+$Location = 'eastus2'
 
 # Retrieve Azure Firewall
 $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroupName
@@ -20,11 +21,11 @@ $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroup
 # Retrieve hub virtual network
 $HubVNet = Get-AzVirtualNetwork -Name $HubVNetName -ResourceGroupName $ResourceGroupName
 
-# Retrieve primary firewall public IP
-$FirewallPublicIP = Get-AzPublicIpAddress -Name $FirewallPublicIPName -ResourceGroupName $ResourceGroupName
+# Create primary firewall public IP
+$FirewallPublicIP = New-AzPublicIpAddress -Name $FirewallPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
 
-# Retrieve management public IP
-$ManagementPublicIP = Get-AzPublicIpAddress -Name $ManagementPublicIPName -ResourceGroupName $ResourceGroupName
+# Create management public IP
+$ManagementPublicIP = New-AzPublicIpAddress -Name $ManagementPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
 
 # Allocate Azure Firewall Basic
 $Firewall.AllocateBasicSku($HubVNet, @($FirewallPublicIP), $ManagementPublicIP)
