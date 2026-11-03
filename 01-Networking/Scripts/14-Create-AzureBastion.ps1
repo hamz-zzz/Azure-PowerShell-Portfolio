@@ -3,7 +3,7 @@ $ResourceGroupName = 'rg-network-hub'
 $Location = 'eastus2'
 
 # Virtual network configuration
-$VNetName = 'vnet-hub'
+$VirtualNetworkName = 'vnet-hub'
 $BastionSubnetName = 'AzureBastionSubnet'
 
 # Public IP configuration
@@ -12,17 +12,26 @@ $PublicIPSku = 'Standard'
 $PublicIPAllocationMethod = 'Static'
 
 # Azure Bastion configuration
-$BastionName = 'bas-hub'
+$BastionName = 'bastion-hub'
 $BastionSku = 'Basic'
 
 # Retrieve hub virtual network
-# Hint: Get-AzVirtualNetwork
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
 
 # Retrieve Bastion subnet
-# Hint: Get subnet from $VNet.Subnets
+$BastionSubnet = $VirtualNetwork.Subnets | Where-Object { $_.Name -eq $BastionSubnetName }
+
+if ($null -eq $BastionSubnet) {
+    throw "Subnet '$BastionSubnetName' was not found in '$VirtualNetworkName'."
+}
 
 # Create public IP address
-# Hint: New-AzPublicIpAddress
+$PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -Sku $PublicIPSku -AllocationMethod $PublicIPAllocationMethod
 
 # Deploy Azure Bastion
-# Hint: New-AzBastion
+$Bastion = New-AzBastion -Name $BastionName -ResourceGroupName $ResourceGroupName -Sku $BastionSku -PublicIpAddress $PublicIP -VirtualNetwork $VirtualNetwork
+
+# Verify Azure Bastion deployment
+$Bastion = Get-AzBastion -Name $BastionName -ResourceGroupName $ResourceGroupName
+$Bastion | Format-List Name, ProvisioningState
+$Bastion.Sku | Format-List

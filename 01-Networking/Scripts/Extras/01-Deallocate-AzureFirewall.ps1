@@ -2,7 +2,7 @@
 $FirewallName = 'azfw-hub'
 $ResourceGroupName = 'rg-network-hub'
 
-# Hint: Get-AzFirewall
+# Retrieve Azure Firewall
 $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroupName
 
 # Deallocate Azure Firewall
