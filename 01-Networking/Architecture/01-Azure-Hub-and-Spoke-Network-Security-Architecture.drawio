@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Page-1" id="aM-KwUDSzB_sRirb3nvB">
-    <mxGraphModel dx="1866" dy="932" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1200" math="0" shadow="0" adaptiveColors="auto">
+    <mxGraphModel dx="1895" dy="981" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1200" math="0" shadow="0" adaptiveColors="auto">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -17,28 +17,25 @@
           <mxGeometry height="535" width="527" x="14" y="42" as="geometry" />
         </mxCell>
         <mxCell id="fwS" parent="hubV" style="swimlane;startSize=24;rounded=1;fillColor=#F7FAFE;strokeColor=#91B7D9;fontColor=#315B80;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="AzureFirewallSubnet  ·  10.0.0.0/26" vertex="1">
-          <mxGeometry height="170" width="503" x="12" y="38" as="geometry" />
+          <mxGeometry height="164" width="503" x="12" y="38" as="geometry" />
         </mxCell>
         <mxCell id="fw" parent="fwS" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/mscae/Azure_Firewall.svg;strokeColor=none;fontSize=14;fontColor=#12304A;labelPerimeter=1;" value="azfw-hub&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Azure Firewall · Basic&lt;br&gt;Centralized egress inspection&lt;/font&gt;" vertex="1">
-          <mxGeometry height="76" width="76" x="205" y="36" as="geometry" />
+          <mxGeometry height="76" width="76" x="205" y="30" as="geometry" />
         </mxCell>
         <mxCell id="pip1" parent="fwS" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Public_IP_Addresses.svg;strokeColor=none;fontSize=11;fontColor=#12304A;labelPerimeter=1;" value="pip-azfw-hub&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Primary public IP&lt;/font&gt;" vertex="1">
-          <mxGeometry height="52" width="56" x="46" y="65" as="geometry" />
-        </mxCell>
-        <mxCell id="pip2" parent="fwS" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Public_IP_Addresses.svg;strokeColor=none;fontSize=10;fontColor=#12304A;labelPerimeter=1;" value="pip-azfw-management-hub&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Management public IP&lt;/font&gt;" vertex="1">
-          <mxGeometry height="52" width="56" x="378" y="65" as="geometry" />
+          <mxGeometry height="38.5" width="41.46" x="359" y="80" as="geometry" />
         </mxCell>
         <mxCell id="fwMgmtS" parent="hubV" style="swimlane;startSize=24;rounded=1;fillColor=#F7FAFE;strokeColor=#91B7D9;fontColor=#315B80;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="AzureFirewallManagementSubnet  ·  10.0.0.64/26" vertex="1">
-          <mxGeometry height="83" width="503" x="12" y="220" as="geometry" />
+          <mxGeometry height="98" width="503" x="12" y="210" as="geometry" />
         </mxCell>
-        <mxCell id="mgmtLbl" parent="fwMgmtS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B7CDE0;fontColor=#41586D;fontSize=12;align=center;" value="Firewall management interface subnet&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;pip-azfw-management-hub associated with management configuration&lt;/font&gt;" vertex="1">
-          <mxGeometry height="44" width="400" x="50" y="32" as="geometry" />
+        <mxCell id="pip2" parent="fwMgmtS" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Public_IP_Addresses.svg;strokeColor=none;fontSize=10;fontColor=#12304A;labelPerimeter=1;" value="pip-azfw-management-hub&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Management public IP&lt;/font&gt;" vertex="1">
+          <mxGeometry height="42" width="45.23" x="355.23" y="28" as="geometry" />
         </mxCell>
         <mxCell id="basS" parent="hubV" style="swimlane;startSize=24;rounded=1;fillColor=#F4F0FA;strokeColor=#9673A6;fontColor=#513B67;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="AzureBastionSubnet  ·  10.0.0.128/26" vertex="1">
           <mxGeometry height="145" width="503" x="12" y="315" as="geometry" />
         </mxCell>
         <mxCell id="bastion" parent="basS" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Bastions.svg;strokeColor=none;fontSize=13;fontColor=#12304A;labelPerimeter=1;" value="bastion-hub&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Azure Bastion · Basic&lt;br&gt;Public IP: pip-bastion-hub&lt;br&gt;&lt;/font&gt;" vertex="1">
-          <mxGeometry height="60" width="60" x="220" y="30" as="geometry" />
+          <mxGeometry height="56" width="56" x="220" y="34" as="geometry" />
         </mxCell>
         <mxCell id="law" parent="hubV" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/analytics/Log_Analytics_Workspaces.svg;strokeColor=none;fontSize=13;fontColor=#12304A;labelPerimeter=1;" value="law-network-hub" vertex="1">
           <mxGeometry height="68" width="76" x="114" y="438" as="geometry" />
@@ -104,10 +101,16 @@
           <mxGeometry height="116" width="352" x="944" y="648" as="geometry" />
         </mxCell>
         <mxCell id="eBastionAdmin" edge="1" parent="1" source="admin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673A6;strokeWidth=3;endArrow=classic;html=1;fontSize=11;fontColor=#513B67;labelBackgroundColor=#FFFFFF;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.16176470588235295;entryX=1;entryY=0.8166666666666667;" target="bastion" value="HTTPS · Azure portal">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="608" y="546" />
+              <mxPoint x="608" y="547" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="eBastionWin" edge="1" parent="1" source="bastion" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#9673A6;strokeWidth=3;endArrow=classic;html=1;fontSize=11;fontColor=#513B67;labelBackgroundColor=#FFFFFF;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;" target="win" value="RDP · TCP 3389">
-          <mxGeometry relative="1" as="geometry">
+          <mxGeometry relative="1" x="0.6448" y="3" as="geometry">
+            <mxPoint as="offset" />
             <Array as="points">
               <mxPoint x="620" y="527" />
               <mxPoint x="620" y="202.8" />
@@ -116,20 +119,21 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="eBastionUbu" edge="1" parent="1" source="bastion" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#9673A6;strokeWidth=3;endArrow=classic;html=1;fontSize=11;fontColor=#513B67;labelBackgroundColor=#FFFFFF;labelPlacement=auto;" target="ubu" value="SSH · TCP 22">
-          <mxGeometry relative="1" as="geometry">
+          <mxGeometry relative="1" x="0.1099" y="6" as="geometry">
+            <mxPoint as="offset" />
             <Array as="points">
               <mxPoint x="1736" y="506.1" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="ePeer" edge="1" parent="1" source="hubV" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#319B70;strokeWidth=3;startArrow=classic;endArrow=classic;html=1;fontSize=13;fontColor=#205B43;labelBackgroundColor=#FFFFFF;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;labelPlacement=auto;" target="workV" value="Hub-to-Workload Peering">
-          <mxGeometry relative="1" as="geometry">
+        <mxCell id="ePeer" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#319B70;strokeWidth=3;startArrow=classic;endArrow=classic;html=1;fontSize=13;fontColor=#205B43;labelBackgroundColor=#FFFFFF;orthogonalLoop=1;jettySize=auto;labelPlacement=auto;" value="Hub-to-Workload Peering">
+          <mxGeometry relative="1" x="-0.0212" y="-10" as="geometry">
+            <mxPoint as="offset" />
             <Array as="points">
-              <mxPoint x="634" y="420" />
-              <mxPoint x="634" y="439" />
-              <mxPoint x="1250" y="439" />
-              <mxPoint x="1250" y="420" />
+              <mxPoint x="1318" y="450" />
             </Array>
+            <mxPoint x="564" y="450" as="sourcePoint" />
+            <mxPoint x="1320" y="450" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="eRoute" edge="1" parent="1" source="rt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D88735;strokeWidth=3;endArrow=classic;html=1;fontSize=12;fontColor=#8A4B0F;labelBackgroundColor=#FFFFFF;labelPlacement=auto;" target="fw" value="Default route · 0.0.0.0/0">
