@@ -36,12 +36,11 @@ Get-AzResourceGroup | Where-Object -Property ResourceGroupName -in $ResourceGrou
 | Bastion subnet | `AzureBastionSubnet` | `10.0.0.128/26` |
 | Workload VNet | `vnet-workload` | `10.1.0.0/16` |
 | Workload subnet | `snet-workload` | `10.1.0.0/24` |
-| AVD subnet | `snet-avd` | `10.1.1.0/24` |
 | Private Endpoints subnet | `snet-private-endpoints` | `10.1.2.0/24` |
 
-`snet-avd` is reserved for Project 02. `snet-private-endpoints` is reserved for Project 03. Neither subnet hosts resources in this project.
+`snet-private-endpoints` is reserved for Project 03. Neither subnet hosts resources in this project.
 
-`vnet-hub` contains the Azure Firewall and Bastion subnets. `vnet-workload` contains `snet-workload`, plus `snet-avd` and `snet-private-endpoints`, which are reserved for later projects.
+`vnet-hub` contains the Azure Firewall and Bastion subnets. `vnet-workload` contains `snet-workload` and `snet-private-endpoints`, which is reserved for a later project.
 
 Hub VNet creation:
 
@@ -57,10 +56,9 @@ Workload VNet creation:
 
 ```powershell
 $WorkloadSubnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-workload' -AddressPrefix '10.1.0.0/24'
-$AVDSubnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-avd' -AddressPrefix '10.1.1.0/24'
 $PrivateEndpointsSubnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-private-endpoints' -AddressPrefix '10.1.2.0/24'
 
-$VirtualNetwork = New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $AddressSpace -Subnet $WorkloadSubnet, $AVDSubnet, $PrivateEndpointsSubnet
+$VirtualNetwork = New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $AddressSpace -Subnet $WorkloadSubnet, $PrivateEndpointsSubnet
 ```
 
 ### VNet peering
@@ -304,10 +302,3 @@ The SSH and RDP tests confirm that the ports are reachable; they do not establis
 - `Scripts/` — deployment and operational scripts.
 - `Queries/` — KQL queries and exported results.
 - `Screenshots/` — configuration and validation evidence.
-
-
-## Scope
-
-This project covers hub-and-spoke networking, workload subnet security, Azure Firewall routing and rules, Bastion access, and firewall diagnostics.
-
-Private Endpoints and Private DNS are part of Project 03. The AVD subnet is reserved for Project 02. VPN Gateway, ExpressRoute, Application Gateway, and Load Balancer are not included.
