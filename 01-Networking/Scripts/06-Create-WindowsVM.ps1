@@ -29,7 +29,7 @@ $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupN
 $Subnet = Get-AzVirtualNetworkSubnetConfig -VirtualNetwork $VirtualNetwork -Name $SubnetName
 
 # Create network interface
-$NetworkInterface = New-AzNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupName -Location $Location -SubnetId $subnet.Id -PrivateIpAddress $PrivateIPAddress
+$NetworkInterface = New-AzNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupName -Location $Location -SubnetId $Subnet.Id -PrivateIpAddress $PrivateIPAddress
 
 # Create VM credentials
 $Credential = Get-Credential -Message 'Enter the local administrator credentials for the Azure VM'

@@ -4,7 +4,7 @@
 
 ## Overview
 
-This project uses a hub-and-spoke network, with Azure Firewall handling outbound traffic, Azure Bastion providing VM access, and firewall logs sent to Log Analytics.
+This project builds a hub-and-spoke network in Azure to centralize traffic inspection and provide secure access to private workloads. Azure Firewall controls outbound traffic, Azure Bastion provides administrative access to the virtual machines, and firewall diagnostics are sent to Log Analytics for monitoring.
 
 Resources are organized into two resource groups:
 
@@ -36,11 +36,8 @@ Get-AzResourceGroup | Where-Object -Property ResourceGroupName -in $ResourceGrou
 | Bastion subnet | `AzureBastionSubnet` | `10.0.0.128/26` |
 | Workload VNet | `vnet-workload` | `10.1.0.0/16` |
 | Workload subnet | `snet-workload` | `10.1.0.0/24` |
-| Private Endpoints subnet | `snet-private-endpoints` | `10.1.2.0/24` |
 
-`snet-private-endpoints` is reserved for Project 03. Neither subnet hosts resources in this project.
-
-`vnet-hub` contains the Azure Firewall and Bastion subnets. `vnet-workload` contains `snet-workload` and `snet-private-endpoints`, which is reserved for a later project.
+`vnet-hub` contains the Azure Firewall and Bastion subnets. `vnet-workload` contains the workload subnet where the Windows and Ubuntu virtual machines are deployed.
 
 Hub VNet creation:
 
@@ -56,9 +53,7 @@ Workload VNet creation:
 
 ```powershell
 $WorkloadSubnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-workload' -AddressPrefix '10.1.0.0/24'
-$PrivateEndpointsSubnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-private-endpoints' -AddressPrefix '10.1.2.0/24'
-
-$VirtualNetwork = New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $AddressSpace -Subnet $WorkloadSubnet, $PrivateEndpointsSubnet
+$VirtualNetwork = New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $AddressSpace -Subnet $WorkloadSubnet
 ```
 
 ### VNet peering
@@ -82,7 +77,7 @@ Get-AzVirtualNetworkPeering -VirtualNetwork $WorkloadVNet.Name -ResourceGroupNam
 
 ## Workload virtual machines
 
-Two VMs are deployed in `snet-workload`. Both use private IP addresses and have no public IP:
+Two virtual machines provide the workloads used to validate the network: a Windows Server VM and an Ubuntu VM. Both are deployed in `snet-workload`, use private IP addresses, and have no public IP:
 
 | VM | NIC | OS disk | Operating system | Size | Private IP |
 |---|---|---|---|---|---|
@@ -117,7 +112,7 @@ The Ubuntu script uses `-Linux` in `Set-AzVMOperatingSystem`; both scripts colle
 
 ## Workload subnet security
 
-`nsg-workload` is associated with `snet-workload` on `vnet-workload`.
+`nsg-workload` is associated with `snet-workload` on `vnet-workload`. It controls inbound access to both workload VMs, allowing the required Bastion and internal connectivity while denying other VNet inbound traffic.
 
 | Priority | Rule | Source | Protocol / port | Action |
 |---:|---|---|---|---|
@@ -187,7 +182,7 @@ Set-AzRouteTable -RouteTable $RouteTable
 
 ## Firewall rules
 
-The `azfw-hub` policy is intentionally narrow. `rc-workload-network` allows DNS to `1.1.1.1`, and `rc-workload-app` allows HTTPS to `google.com`. These are the only outbound destinations permitted for the connectivity tests:
+The firewall provides centralized outbound filtering for the workload subnet. Its policy is intentionally narrow: `rc-workload-network` allows DNS to `1.1.1.1`, and `rc-workload-app` allows HTTPS to `google.com`. These are the only outbound destinations permitted for the connectivity tests:
 
 | Collection | Rule | Destination | Protocol / port | Action |
 |---|---|---|---|---|
@@ -237,7 +232,7 @@ Get-AzBastion -Name 'bastion-hub' -ResourceGroupName 'rg-network-hub' | Format-L
 
 ## Firewall diagnostics
 
-`law-network-hub` is created in `rg-network-hub`. Diagnostic setting `diag-azfw-hub` sends the network-rule and application-rule logs from `azfw-hub` to this workspace.
+`law-network-hub` is created in `rg-network-hub`. Diagnostic setting `diag-azfw-hub` sends the network-rule and application-rule logs from `azfw-hub` to this workspace, making firewall decisions available for review and troubleshooting.
 
 ```powershell
 $Workspace = New-AzOperationalInsightsWorkspace -Name 'law-network-hub' -ResourceGroupName 'rg-network-hub' -Location 'eastus2'

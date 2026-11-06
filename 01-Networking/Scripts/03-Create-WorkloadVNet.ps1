@@ -6,10 +6,9 @@ $AddressSpace = '10.1.0.0/16'
 
 # Subnet configuration
 $WorkloadSubnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-workload' -AddressPrefix '10.1.0.0/24'
-$PrivateEndpointsSubnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-private-endpoints' -AddressPrefix '10.1.1.0/24'
 
 # Create virtual network
-$VirtualNetwork = New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $AddressSpace -Subnet $WorkloadSubnet, $AVDSubnet, $PrivateEndpointsSubnet
+$VirtualNetwork = New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $AddressSpace -Subnet $WorkloadSubnet
 
 # Verify deployment
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
