@@ -6,35 +6,34 @@ $Location = 'eastus2'
 $ResourceGroupName = 'rg-compute-web'
 
 # Public IP configuration
-$PublicIPNames = 'pip-lb-windows', 'pip-lb-linux'
+$WindowsPublicIPName = 'pip-lb-windows'
+$LinuxPublicIPName = 'pip-lb-linux'
 
 # Frontend configuration
-$FrontendNames = 'fe-windows', 'fe-linux'
+$WindowsFrontendName = 'fe-windows'
+$LinuxFrontendName = 'fe-linux'
 
 # Backend pool configuration
-$BackendPoolNames = 'bepool-windows', 'bepool-linux'
+$WindowsBackendPoolName = 'bepool-windows'
+$LinuxBackendPoolName = 'bepool-linux'
 
 # Create public IP addresses
-# New-AzPublicIpAddress
-$PublicIPAddresses += foreach ($PublicIPName in $PublicIPNames) {
-    New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -Sku Standard -AllocationMethod Static
-}
+$WindowsPublicIP = New-AzPublicIpAddress -Name $WindowsPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -Sku Standard -AllocationMethod Static
+$LinuxPublicIP = New-AzPublicIpAddress -Name $LinuxPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -Sku Standard -AllocationMethod Static
 
 # Create Load Balancer frontend configurations
-$FrontendIpConfigurations = for ($i = 0; $i -lt $FrontendNames.Count; $i++) {
-    New-AzLoadBalancerFrontendIpConfig -Name $FrontendNames[$i] -PublicIpAddress $PublicIPAddresses[$i]
-}
+$WindowsFrontend = New-AzLoadBalancerFrontendIpConfig -Name $WindowsFrontendName -PublicIpAddress $WindowsPublicIP
+$LinuxFrontend = New-AzLoadBalancerFrontendIpConfig -Name $LinuxFrontendName -PublicIpAddress $LinuxPublicIP
 
 # Create Load Balancer backend address pools
-$BackendAddressPools = foreach ($BackendPoolName in $BackendPoolNames) {
-    New-AzLoadBalancerBackendAddressPoolConfig -Name $BackendPoolName
-}
+$WindowsBackendPool = New-AzLoadBalancerBackendAddressPoolConfig -Name $WindowsBackendPoolName
+$LinuxBackendPool = New-AzLoadBalancerBackendAddressPoolConfig -Name $LinuxBackendPoolName
+
 # Create Load Balancer
-# New-AzLoadBalancer
-New-AzLoadBalancer -Name $LoadBalancerName -ResourceGroupName $ResourceGroupName -Location $Location -Sku Standard -Tier Regional -FrontendIpConfiguration $FrontendIpConfigurations -BackendAddressPool $BackendAddressPools
+New-AzLoadBalancer -Name $LoadBalancerName -ResourceGroupName $ResourceGroupName -Location $Location -Sku Standard -Tier Regional -FrontendIpConfiguration $WindowsFrontend, $LinuxFrontend -BackendAddressPool $WindowsBackendPool, $LinuxBackendPool
 
 # Verify public IP addresses
-Get-AzPublicIpAddress -ResourceGroupName $ResourceGroupName | Where-Object Name -in $PublicIPNames | Format-Table Name, Location, @{N='SKU'; E={$_.Sku.Name}}, PublicIpAllocationMethod, IpAddress
+Get-AzPublicIpAddress -ResourceGroupName $ResourceGroupName | Where-Object Name -in $WindowsPublicIPName, $LinuxPublicIPName | Format-Table Name, Location, @{N = 'SKU'; E = { $_.Sku.Name }}, PublicIpAllocationMethod, IpAddress
 
 # Verify Load Balancer
-Get-AzLoadBalancer -Name $LoadBalancerName -ResourceGroupName $ResourceGroupName | Format-List Name, Location, @{N='SKU'; E={$_.Sku.Name}}, ProvisioningState
+Get-AzLoadBalancer -Name $LoadBalancerName -ResourceGroupName $ResourceGroupName | Format-List Name, Location, @{N = 'SKU'; E = { $_.Sku.Name }}, ProvisioningState
