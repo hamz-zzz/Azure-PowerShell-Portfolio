@@ -37,8 +37,8 @@ $Credential = Get-Credential -Message 'Enter the local administrator credentials
 # Configure virtual machine
 $VMConfig = New-AzVMConfig -VMName $VMName -VMSize $VMSize
 
-# Disable Boot Diagnostics
-Set-AzVMBootDiagnostic -VM $VMConfig -Disable
+# Enable Boot Diagnostics using Microsoft-managed storage
+Set-AzVMBootDiagnostic -VM $VMConfig -Enable
 
 # Configure operating system
 Set-AzVMOperatingSystem -VM $VMConfig -ComputerName $VMName -Credential $Credential -Windows
