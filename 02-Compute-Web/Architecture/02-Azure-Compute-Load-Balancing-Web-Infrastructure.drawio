@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Page-1" id="6wR4inRRKZNo_kYKrkz3">
-    <mxGraphModel dx="1573" dy="941" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" adaptiveColors="auto">
+    <mxGraphModel dx="1071" dy="640" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" adaptiveColors="auto">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -59,10 +59,10 @@
           <mxGeometry height="170" width="350" x="105" y="48" as="geometry" />
         </mxCell>
         <mxCell id="win1" parent="winpool" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/compute/Virtual_Machine.svg;strokeColor=none;fontSize=10;fontColor=#12304A;labelPerimeter=1;labelBackgroundColor=none;" value="vm-web-win01&lt;br&gt;10.0.0.4&lt;br&gt;Windows Server 2022 · IIS" vertex="1">
-          <mxGeometry height="110" width="80" x="45" y="18" as="geometry" />
+          <mxGeometry height="110" width="80" x="45" y="17" as="geometry" />
         </mxCell>
         <mxCell id="win2" parent="winpool" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/compute/Virtual_Machine.svg;strokeColor=none;fontSize=10;fontColor=#12304A;labelPerimeter=1;labelBackgroundColor=none;" value="vm-web-win02&lt;br&gt;10.0.0.5&lt;br&gt;Windows Server 2022 · IIS" vertex="1">
-          <mxGeometry height="110" width="80" x="225" y="18" as="geometry" />
+          <mxGeometry height="110" width="80" x="225" y="17" as="geometry" />
         </mxCell>
         <mxCell id="linuxpool" parent="subnet" style="swimlane;startSize=28;rounded=1;fillColor=#E7F5EC;strokeColor=#3C9B70;fontColor=#205B43;fontSize=12;fontStyle=1;html=1;collapsible=0;" value="LINUX BACKEND POOL · bepool-linux" vertex="1">
           <mxGeometry height="170" width="350" x="485" y="48" as="geometry" />
