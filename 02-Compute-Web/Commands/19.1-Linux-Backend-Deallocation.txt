@@ -1,0 +1,31 @@
+:\Users\Hamza> Stop-AzVM -ResourceGroupName 'rg-compute-web' -Name 'vm-web-linux01' -Force
+
+OperationId : 72b07fbb-f0ff-4d6e-b7d8-67d690a81a62
+Status      : Succeeded
+StartTime   : 11/7/2026 11:01:50 AM
+EndTime     : 11/7/2026 11:02:32 AM
+Error       :
+
+C:\Users\Hamza> Get-AzVM -ResourceGroupName 'rg-compute-web' -Name 'vm-web-linux01' -Status
+
+
+ResourceGroupName : rg-compute-web
+Name              : vm-web-linux01
+HyperVGeneration  : V2
+BootDiagnostics   :
+Disks[0]          :
+  Name            : osdisk-web-linux01
+  Statuses[0]     :
+    Code          : ProvisioningState/succeeded
+    Level         : Info
+    DisplayStatus : Provisioning succeeded
+    Time          : 11/7/2026 4:02:02 PM
+Statuses[0]       :
+  Code            : ProvisioningState/succeeded
+  Level           : Info
+  DisplayStatus   : Provisioning succeeded
+  Time            : 11/7/2026 4:02:02 PM
+Statuses[1]       :
+  Code            : PowerState/deallocated
+  Level           : Info
+  DisplayStatus   : VM deallocated
