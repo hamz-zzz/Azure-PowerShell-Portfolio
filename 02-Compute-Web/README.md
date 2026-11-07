@@ -495,7 +495,7 @@ Backend deallocation was used to test how the health probes affect traffic distr
       <img src="Screenshots/18.1-Windows-Backend-Deallocation.png" alt="Windows backend deallocation" width="100%">
       <p><strong>2. Backend marked unhealthy</strong></p>
       <img src="Screenshots/18.2-Windows-Backend-Unhealthy.png" alt="Windows backend unhealthy state" width="100%">
-      <p><strong>3. Requests reach vm-web-win02</strong></p>
+      <p><strong>3. Requests reach vm-web-win02 only</strong></p>
       <img src="Screenshots/18.3-Windows-Failover-Test.png" alt="Windows failover requests" width="100%">
     </td>
     <td>
@@ -522,7 +522,7 @@ Backend deallocation was used to test how the health probes affect traffic distr
       <img src="Screenshots/19.1-Linux-Backend-Deallocation.png" alt="Linux backend deallocation" width="100%">
       <p><strong>2. Backend marked unhealthy</strong></p>
       <img src="Screenshots/19.2-Linux-Backend-Unhealthy.png" alt="Linux backend unhealthy state" width="100%">
-      <p><strong>3. Requests reach vm-web-linux02</strong></p>
+      <p><strong>3. Requests reach vm-web-linux02 only</strong></p>
       <img src="Screenshots/19.3-Linux-Failover-Test.png" alt="Linux failover requests" width="100%">
     </td>
     <td>
