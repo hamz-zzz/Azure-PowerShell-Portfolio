@@ -32,5 +32,5 @@ Set-AzVirtualNetwork -VirtualNetwork $VirtualNetwork
 # Verify NSG configuration
 Get-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
-$VirtualNetwork.Subnets | Select-Object Name, AddressPrefix, @{Name = 'NSG'; Expression = { $_.NetworkSecurityGroup.Id } }
+$VirtualNetwork.Subnets | Select-Object Name, AddressPrefix, @{Name = 'NSG'; Expression = { Split-Path $_.NetworkSecurityGroup.Id -Leaf } }
 (Get-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName).SecurityRules | Format-Table Name, Priority, Direction, Access, Protocol, SourceAddressPrefix, SourcePortRange, DestinationAddressPrefix, DestinationPortRange

@@ -17,7 +17,6 @@ $Subnet = New-AzVirtualNetworkSubnetConfig -Name $SubnetName -AddressPrefix $Sub
 New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $VirtualNetworkAddressPrefix -Subnet $Subnet
 
 # Verify Deployment
-# Hint: Get-AzVirtualNetwork
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
 $VirtualNetwork | Format-List Name, Location
 $VirtualNetwork.AddressSpace | Format-List AddressPrefixes
