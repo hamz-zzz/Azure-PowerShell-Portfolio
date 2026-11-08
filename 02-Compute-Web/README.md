@@ -1,4 +1,4 @@
-# Project 02 — Azure Compute, Load Balancing & Web Infrastructure
+# Project 02  -  Azure Compute, Load Balancing & Web Infrastructure
 
 ![Azure Compute, Load Balancing & Web Infrastructure](Architecture/02-Azure-Compute-Load-Balancing-Web-Infrastructure.svg)
 
@@ -381,15 +381,23 @@ The same script also creates the RDP and SSH NSG rules using my public IPv4 as t
 
 The NAT mappings were validated by connecting to each VM through its Load Balancer frontend. The sessions below show the target hostname and confirm that administrative access works without public IP addresses on the VM NICs.
 
-**Windows — RDP**
+**Windows  -  RDP**
+
+#### RDP to `vm-web-win01` via `40.70.207.116:50001`
 
 ![RDP session to vm-web-win01](Screenshots/20.1-RDP-vm-web-win01.png)
 
+#### RDP to `vm-web-win02` via `40.70.207.116:50002`
+
 ![RDP session to vm-web-win02](Screenshots/20.2-RDP-vm-web-win02.png)
 
-**Linux — SSH**
+**Linux  -  SSH**
+
+#### SSH to `vm-web-linux01` via `52.247.66.223:60001`
 
 ![SSH session to vm-web-linux01](Screenshots/21.1-SSH-vm-web-linux01.png)
+
+#### SSH to `vm-web-linux02` via `52.247.66.223:60002`
 
 ![SSH session to vm-web-linux02](Screenshots/21.2-SSH-vm-web-linux02.png)
 
@@ -538,8 +546,8 @@ Backend deallocation was used to test how the health probes affect traffic distr
 
 ## Project files
 
-- `Architecture/` — architecture diagram and exported versions.
-- `Configs/` — IIS and NGINX guest configuration.
-- `Commands/` — command output from load-balancing, failover, recovery, and DNS validation.
-- `Screenshots/` — Azure configuration and validation evidence.
-- `Scripts/` — Azure PowerShell deployment and configuration scripts.
+- `Architecture/`  -  architecture diagram and exported versions.
+- `Configs/`  -  IIS and NGINX guest configuration.
+- `Commands/`  -  command output from load-balancing, failover, recovery, and DNS validation.
+- `Screenshots/`  -  Azure configuration and validation evidence.
+- `Scripts/`  -  Azure PowerShell deployment and configuration scripts.

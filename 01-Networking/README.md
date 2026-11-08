@@ -1,15 +1,15 @@
-# Project 01 — Azure Hub-and-Spoke Network & Security Architecture
+# Project 01 - Azure Hub-and-Spoke Network & Security Architecture
 
 ![Azure Hub-and-Spoke Network & Security Architecture](Architecture/01-Azure-Hub-and-Spoke-Network-Security-Architecture.svg)
 
 ## Overview
 
-This project builds a hub-and-spoke network in Azure to centralize traffic inspection and provide secure access to private workloads. Azure Firewall controls outbound traffic, Azure Bastion provides administrative access to the virtual machines, and firewall diagnostics are sent to Log Analytics for monitoring.
+This project builds a hub-and-spoke network in Azure to centralize traffic inspection and provide secure access to private workloads. Azure Firewall controls outbound traffic, Azure Bastion provides administrative access to the virtual machines, and firewall diagnostics are sent to Log Analytics for monitoring. Windows Server and Ubuntu test VMs are used to validate private connectivity, DNS resolution, and controlled outbound access.
 
 Resources are organized into two resource groups:
 
-- `rg-network-hub` — hub VNet, Azure Firewall, Azure Bastion, public IP resources, and Log Analytics.
-- `rg-network-workload` — workload VNet, NSG, route table, and test VMs.
+- `rg-network-hub` - hub VNet, Azure Firewall, Azure Bastion, public IP resources, and Log Analytics.
+- `rg-network-workload` - workload VNet, NSG, route table, and test VMs.
 
 The script creates both resource groups in East US 2 and checks their provisioning state:
 
@@ -104,7 +104,7 @@ $VirtualMachine = Add-AzVMNetworkInterface -VM $VMConfig -Id $NetworkInterface.I
 New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine
 ```
 
-The Ubuntu script uses `-Linux` in `Set-AzVMOperatingSystem`; both scripts collect credentials with `Get-Credential`.
+The Ubuntu script uses `-Linux` in `Set-AzVMOperatingSystem`. Both scripts collect credentials with `Get-Credential`.
 
 **Scripts:** [Windows VM](Scripts/06-Create-WindowsVM.ps1) · [Ubuntu VM](Scripts/07-Create-UbuntuVM.ps1)
 
@@ -155,7 +155,7 @@ Both public IP resources are created before `azfw-hub`:
 $FirewallPublicIP = New-AzPublicIpAddress -Name $FirewallPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
 $ManagementPublicIP = New-AzPublicIpAddress -Name $ManagementPublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
 
-$Firewall = New-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroupName -Location $Location -VirtualNetwork $HubVNet -PublicIpAddress $FirewallPublicIP -ManagementPublicIpAddress $ManagementPublicIP -SkuTier $FirewallSKU
+$Firewall = New-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroupName -Location $Location -VirtualNetwork $HubVNet -PublicIpAddress $FirewallPublicIP -ManagementPublicIpAddress $ManagementPublicIP -SkuTier Basic
 ```
 
 After deployment, the firewall configuration is checked for its assigned private IP:
@@ -172,7 +172,7 @@ $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $FirewallResou
 $FirewallPrivateIP = $Firewall.IpConfigurations[0].PrivateIpAddress
 
 $RouteTable = New-AzRouteTable -Name $RouteTableName -ResourceGroupName $ResourceGroupName -Location $Location
-Add-AzRouteConfig -Name $RouteName -AddressPrefix $AddressPrefix -NextHopType $NextHopType -NextHopIpAddress $FirewallPrivateIP -RouteTable $RouteTable
+Add-AzRouteConfig -Name $RouteName -AddressPrefix $AddressPrefix -NextHopType VirtualAppliance -NextHopIpAddress $FirewallPrivateIP -RouteTable $RouteTable
 Set-AzRouteTable -RouteTable $RouteTable
 ```
 
@@ -192,8 +192,8 @@ The firewall provides centralized outbound filtering for the workload subnet. It
 `allow-dns` is a network rule targeting an IP address and port. `allow-https` is an application rule targeting an FQDN. The DNS rule and its collection are created and applied to `azfw-hub` as follows:
 
 ```powershell
-$Rule = New-AzFirewallNetworkRule -Name 'allow-dns' -SourceAddress '10.1.0.0/24' -DestinationAddress '1.1.1.1' -Protocol 'UDP' -DestinationPort '53'
-$RuleCollection = New-AzFirewallNetworkRuleCollection -Name 'rc-workload-network' -Priority 100 -ActionType 'Allow' -Rule $Rule
+$Rule = New-AzFirewallNetworkRule -Name 'allow-dns' -SourceAddress '10.1.0.0/24' -DestinationAddress '1.1.1.1' -Protocol UDP -DestinationPort 53
+$RuleCollection = New-AzFirewallNetworkRuleCollection -Name 'rc-workload-network' -Priority 100 -ActionType Allow -Rule $Rule
 
 $Firewall = Get-AzFirewall -Name 'azfw-hub' -ResourceGroupName 'rg-network-hub'
 $Firewall.NetworkRuleCollections.Add($RuleCollection)
@@ -204,7 +204,7 @@ Set-AzFirewall -AzureFirewall $Firewall
 
 ```powershell
 $Rule = New-AzFirewallApplicationRule -Name 'allow-https' -SourceAddress '10.1.0.0/24' -TargetFqdn 'google.com' -Protocol 'Https:443'
-$RuleCollection = New-AzFirewallApplicationRuleCollection -Name 'rc-workload-app' -Priority 200 -ActionType 'Allow' -Rule $Rule
+$RuleCollection = New-AzFirewallApplicationRuleCollection -Name 'rc-workload-app' -Priority 200 -ActionType Allow -Rule $Rule
 
 $Firewall = Get-AzFirewall -Name 'azfw-hub' -ResourceGroupName 'rg-network-hub'
 $Firewall.ApplicationRuleCollections.Add($RuleCollection)
@@ -217,11 +217,11 @@ Set-AzFirewall -AzureFirewall $Firewall
 
 ## Azure Bastion
 
-Azure Bastion Basic (`bastion-hub`) is deployed in `AzureBastionSubnet` on `vnet-hub`, using Standard static public IP `pip-bastion-hub`. It provides RDP access to `vm-windows01` and SSH access to `vm-ubuntu01`; neither VM has a public IP:
+Azure Bastion Basic (`bastion-hub`) is deployed in `AzureBastionSubnet` on `vnet-hub`, using Standard static public IP `pip-bastion-hub`. It provides RDP access to `vm-windows01` and SSH access to `vm-ubuntu01`. Neither VM has a public IP:
 
 ```powershell
-$PublicIP = New-AzPublicIpAddress -Name 'pip-bastion-hub' -ResourceGroupName 'rg-network-hub' -Location 'eastus2' -Sku 'Standard' -AllocationMethod 'Static'
-$Bastion = New-AzBastion -Name 'bastion-hub' -ResourceGroupName 'rg-network-hub' -Sku 'Basic' -PublicIpAddress $PublicIP -VirtualNetwork $VirtualNetwork
+$PublicIP = New-AzPublicIpAddress -Name 'pip-bastion-hub' -ResourceGroupName 'rg-network-hub' -Location 'eastus2' -Sku Standard -AllocationMethod Static
+$Bastion = New-AzBastion -Name 'bastion-hub' -ResourceGroupName 'rg-network-hub' -Sku Basic -PublicIpAddress $PublicIP -VirtualNetwork $VirtualNetwork
 
 Get-AzBastion -Name 'bastion-hub' -ResourceGroupName 'rg-network-hub' | Format-List Name, ProvisioningState, Sku
 ```
@@ -249,16 +249,40 @@ $Log = @(
 New-AzDiagnosticSetting -Name 'diag-azfw-hub' -ResourceId $Firewall.Id -WorkspaceId $Workspace.ResourceId -Log $Log -LogAnalyticsDestinationType 'Dedicated'
 ```
 
-The KQL queries are kept in the `Queries/` folder:
+The KQL queries are kept in the `Queries/` folder. The network-rule query retrieves recent network-rule events:
+
+```kql
+AZFWNetworkRule
+| where TimeGenerated > ago(15m)
+| sort by TimeGenerated desc
+```
+
+The application-rule query uses the same time window against `AZFWApplicationRule`:
+
+```kql
+AZFWApplicationRule
+| where TimeGenerated > ago(15m)
+| sort by TimeGenerated desc
+```
 
 - [Network rule query](Queries/01-FirewallNetworkRules.kql)
 - [Application rule query](Queries/02-FirewallApplicationRules.kql)
 
-The query results show DNS requests matching `allow-dns` and HTTPS requests to `google.com` matching `allow-https`. Exports are stored in `Queries/Results/`.
+The exported results provide evidence of the firewall's allow and deny decisions. The network-rule export contains 19 events: 11 allowed DNS requests to `1.1.1.1:53` and 8 denied UDP requests to port 123 by the default action. The application-rule export contains 75 HTTPS events: 2 requests to `google.com` matched `rc-workload-app` / `allow-https`, while 73 unmatched requests were denied by the default action. This reflects the intentionally narrow outbound policy rather than unrestricted internet access.
 
 **Scripts:** [Create Log Analytics workspace](Scripts/12-Create-LogAnalyticsWorkspace.ps1) · [Configure firewall diagnostics](Scripts/13-Configure-AzureFirewallDiagnostics.ps1)
 
-**Screenshots:** [Log Analytics workspace](Screenshots/20-Log-Analytics-Workspace.png) · [Firewall diagnostic setting](Screenshots/21-Firewall-Diagnostic-Settings.png) · [Network rule logs](Screenshots/28-Firewall-Network-Rule-Logs.png) · [Application rule logs](Screenshots/29-Firewall-Application-Rule-Logs.png)
+**Screenshots:** [Log Analytics workspace](Screenshots/20-Log-Analytics-Workspace.png) · [Firewall diagnostic setting](Screenshots/21-Firewall-Diagnostic-Settings.png)
+
+### Network rule logs
+
+![Firewall network rule logs](Screenshots/28-Firewall-Network-Rule-Logs.png)
+
+### Application rule logs
+
+![Firewall application rule logs](Screenshots/29-Firewall-Application-Rule-Logs.png)
+
+**Exported results:** [Network rule results](Queries/Results/01-FirewallNetworkRules-2026-11-04.csv) · [Application rule results](Queries/Results/02-FirewallApplicationRules-2026-11-04.csv)
 
 ## Connectivity validation
 
@@ -287,13 +311,44 @@ curl -I https://google.com
 | Ubuntu HTTPS | `curl -I https://google.com` | `HTTP/2 301` |
 | Windows HTTPS diagnostic | `curl.exe -Iv --ssl-no-revoke https://google.com` | Request completed |
 
-The SSH and RDP tests confirm that the ports are reachable; they do not establish authenticated sessions. Bastion session records are shown separately.
+The SSH and RDP tests confirm that the ports are reachable. They do not establish authenticated sessions. Bastion session records are shown separately.
 
-**Screenshots:** [Windows-to-Ubuntu SSH](Screenshots/24-Windows-to-Ubuntu-SSH-Test.png) · [Ubuntu-to-Windows RDP port test](Screenshots/25-Ubuntu-to-Windows-RDP-Test.png) · [Windows DNS](Screenshots/26.1-Windows-DNS-Resolution-Test.png) · [Ubuntu DNS](Screenshots/26.2-Ubuntu-DNS-Resolution-Test.png) · [Windows HTTPS](Screenshots/27.1-Windows-HTTPS-Connectivity-Test.png) · [Ubuntu HTTPS](Screenshots/27.2-Ubuntu-HTTPS-Connectivity-Test.png)
+After connecting to each VM through Azure Bastion, I ran the connectivity tests from its session. The following screenshots show the results from both VMs for private connectivity, DNS resolution, and HTTPS connectivity.
+
+**Private connectivity - Windows VM to Ubuntu VM (SSH port 22)**
+
+![Windows-to-Ubuntu SSH test](Screenshots/24-Windows-to-Ubuntu-SSH-Test.png)
+
+**Private connectivity - Ubuntu VM to Windows VM (RDP port 3389)**
+
+![Ubuntu-to-Windows RDP port test](Screenshots/25-Ubuntu-to-Windows-RDP-Test.png)
+
+**DNS resolution - from Windows VM**
+
+![Windows DNS resolution test](Screenshots/26.1-Windows-DNS-Resolution-Test.png)
+
+**DNS resolution - from Ubuntu VM**
+
+![Ubuntu DNS resolution test](Screenshots/26.2-Ubuntu-DNS-Resolution-Test.png)
+
+**HTTPS connectivity - from Windows VM**
+
+![Windows HTTPS connectivity test](Screenshots/27.1-Windows-HTTPS-Connectivity-Test.png)
+
+**HTTPS connectivity - from Ubuntu VM**
+
+![Ubuntu HTTPS connectivity test](Screenshots/27.2-Ubuntu-HTTPS-Connectivity-Test.png)
+
+## Additional scripts
+
+I added the deallocation and allocation scripts so I can shut down Azure Firewall between lab sessions and avoid paying for it while I'm not using the environment. When I need the firewall again, the allocation script recreates its public IP resources and updates the workload route if the firewall's private IP has changed. The public IP addresses may also change when they are recreated.
+
+- [Deallocate Azure Firewall](Scripts/Extras/01-Deallocate-AzureFirewall.ps1)
+- [Allocate Azure Firewall](Scripts/Extras/02-Allocate-AzureFirewall.ps1)
 
 ## Project files
 
-- `Architecture/` — architecture diagram.
-- `Scripts/` — deployment and operational scripts.
-- `Queries/` — KQL queries and exported results.
-- `Screenshots/` — configuration and validation evidence.
+- `Architecture/` - architecture diagram.
+- `Scripts/` - deployment, operational, and extra scripts.
+- `Queries/` - KQL queries and exported results.
+- `Screenshots/` - configuration and validation evidence.

@@ -10,7 +10,6 @@ $SubnetName = 'snet-workload'
 # Route configuration
 $RouteName = 'route-to-internet'
 $AddressPrefix = '0.0.0.0/0'
-$NextHopType = 'VirtualAppliance'
 
 # Azure Firewall configuration
 $FirewallName = 'azfw-hub'
@@ -26,7 +25,7 @@ $FirewallPrivateIP = $Firewall.IpConfigurations[0].PrivateIpAddress
 $RouteTable = New-AzRouteTable -Name $RouteTableName -ResourceGroupName $ResourceGroupName -Location $Location
 
 # Create default route
-Add-AzRouteConfig -Name $RouteName -AddressPrefix $AddressPrefix -NextHopType $NextHopType -NextHopIpAddress $FirewallPrivateIP -RouteTable $RouteTable
+Add-AzRouteConfig -Name $RouteName -AddressPrefix $AddressPrefix -NextHopType VirtualAppliance -NextHopIpAddress $FirewallPrivateIP -RouteTable $RouteTable
 
 # Apply route configuration
 Set-AzRouteTable -RouteTable $RouteTable

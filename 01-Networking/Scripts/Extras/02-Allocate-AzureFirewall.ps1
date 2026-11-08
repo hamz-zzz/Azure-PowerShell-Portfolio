@@ -7,7 +7,6 @@ $HubVNetName = 'vnet-hub'
 $RouteTableName = 'rt-workload'
 $RouteName = 'route-to-internet'
 $AddressPrefix = '0.0.0.0/0'
-$NextHopType = 'VirtualAppliance'
 $RouteTableResourceGroupName = 'rg-network-workload'
 
 # Public IP configuration
@@ -47,7 +46,7 @@ $Route = $RouteTable.Routes | Where-Object Name -eq $RouteName
 
 # Update route next-hop IP if necessary
 if ($Route.NextHopIpAddress -ne $FirewallPrivateIP) {
-    Set-AzRouteConfig -Name $RouteName -AddressPrefix $AddressPrefix -NextHopType $NextHopType -NextHopIpAddress $FirewallPrivateIP -RouteTable $RouteTable
+    Set-AzRouteConfig -Name $RouteName -AddressPrefix $AddressPrefix -NextHopType VirtualAppliance -NextHopIpAddress $FirewallPrivateIP -RouteTable $RouteTable
     Set-AzRouteTable -RouteTable $RouteTable
 }
 

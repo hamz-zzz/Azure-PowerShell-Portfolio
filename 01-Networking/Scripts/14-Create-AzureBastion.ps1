@@ -8,12 +8,9 @@ $BastionSubnetName = 'AzureBastionSubnet'
 
 # Public IP configuration
 $PublicIPName = 'pip-bastion-hub'
-$PublicIPSku = 'Standard'
-$PublicIPAllocationMethod = 'Static'
 
 # Azure Bastion configuration
 $BastionName = 'bastion-hub'
-$BastionSku = 'Basic'
 
 # Retrieve hub virtual network
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
@@ -26,10 +23,10 @@ if ($null -eq $BastionSubnet) {
 }
 
 # Create public IP address
-$PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -Sku $PublicIPSku -AllocationMethod $PublicIPAllocationMethod
+$PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -Sku Standard -AllocationMethod Static
 
 # Deploy Azure Bastion
-$Bastion = New-AzBastion -Name $BastionName -ResourceGroupName $ResourceGroupName -Sku $BastionSku -PublicIpAddress $PublicIP -VirtualNetwork $VirtualNetwork
+$Bastion = New-AzBastion -Name $BastionName -ResourceGroupName $ResourceGroupName -Sku Basic -PublicIpAddress $PublicIP -VirtualNetwork $VirtualNetwork
 
 # Verify Azure Bastion deployment
 $Bastion = Get-AzBastion -Name $BastionName -ResourceGroupName $ResourceGroupName

@@ -5,8 +5,6 @@ $ResourceGroupName = 'rg-network-hub'
 # Application rule configuration
 $RuleName = 'allow-https'
 $RuleCollectionName = 'rc-workload-app'
-$RuleCollectionPriority = 200
-$RuleCollectionAction = 'Allow'
 
 # Network configuration
 $SourceAddress = '10.1.0.0/24'
@@ -19,7 +17,7 @@ $Rule = New-AzFirewallApplicationRule -Name $RuleName -SourceAddress $SourceAddr
 
 # Create application rule collection
 # Hint: New-AzFirewallApplicationRuleCollection
-$RuleCollection = New-AzFirewallApplicationRuleCollection -Name $RuleCollectionName -Priority $RuleCollectionPriority -ActionType $RuleCollectionAction -Rule $Rule
+$RuleCollection = New-AzFirewallApplicationRuleCollection -Name $RuleCollectionName -Priority 200 -ActionType Allow -Rule $Rule
 
 # Retrieve Azure Firewall
 # Hint: Get-AzFirewall

@@ -5,21 +5,17 @@ $ResourceGroupName = 'rg-network-hub'
 # Network configuration
 $SourceAddress = '10.1.0.0/24'
 $DestinationAddress = '1.1.1.1'
-$Protocol = 'UDP'
-$DestinationPort = '53'
 
 # Network rule configuration
 $RuleName = 'allow-dns'
 $RuleCollectionName = 'rc-workload-network'
-$RuleCollectionPriority = 100
-$RuleCollectionAction = 'Allow'
 
 # Create network rule
 # Hint: New-AzFirewallNetworkRule
-$Rule = New-AzFirewallNetworkRule -Name $RuleName -SourceAddress $SourceAddress -DestinationAddress $DestinationAddress -Protocol $Protocol -DestinationPort $DestinationPort
+$Rule = New-AzFirewallNetworkRule -Name $RuleName -SourceAddress $SourceAddress -DestinationAddress $DestinationAddress -Protocol UDP -DestinationPort 53
 
 # Create network rule collection
-$RuleCollection = New-AzFirewallNetworkRuleCollection -Name $RuleCollectionName -Priority $RuleCollectionPriority -ActionType $RuleCollectionAction -Rule $Rule
+$RuleCollection = New-AzFirewallNetworkRuleCollection -Name $RuleCollectionName -Priority 100 -ActionType Allow -Rule $Rule
 
 # Retrieve Azure Firewall
 $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroupName
