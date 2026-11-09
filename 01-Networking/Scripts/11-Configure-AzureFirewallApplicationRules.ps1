@@ -12,22 +12,18 @@ $TargetFQDN = 'google.com'
 $Protocol = 'Https:443'
 
 # Create application rule
-# Hint: New-AzFirewallApplicationRule
 $Rule = New-AzFirewallApplicationRule -Name $RuleName -SourceAddress $SourceAddress -TargetFqdn $TargetFQDN -Protocol $Protocol
 
 # Create application rule collection
-# Hint: New-AzFirewallApplicationRuleCollection
 $RuleCollection = New-AzFirewallApplicationRuleCollection -Name $RuleCollectionName -Priority 200 -ActionType Allow -Rule $Rule
 
 # Retrieve Azure Firewall
-# Hint: Get-AzFirewall
 $Firewall = Get-AzFirewall -Name $FirewallName -ResourceGroupName $ResourceGroupName
 
 # Add application rule collection to firewall
 $Firewall.ApplicationRuleCollections.Add($RuleCollection)
 
 # Apply updated firewall configuration
-# Hint: Set-AzFirewall -AzureFirewall
 Set-AzFirewall -AzureFirewall $Firewall
 
 # Retrieve updated firewall configuration
