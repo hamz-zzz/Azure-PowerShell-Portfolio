@@ -14,6 +14,8 @@ $BlobConnectionName = 'blob-connection'
 $FilesConnectionName = 'files-connection'
 $BlobEndpointName = 'private-endpoint-blob'
 $FilesEndpointName = 'private-endpoint-files'
+$BlobIPConfigName = 'blob-ipconfig'
+$FilesIPConfigName = 'files-ipconfig'
 
 # Private DNS configuration
 $BlobDNSZoneName = 'privatelink.blob.core.windows.net'
@@ -29,16 +31,22 @@ $Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName
 $StorageAccount = Get-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName
 
 # Create Blob Private Link service connection
-$BlobConnection = New-AzPrivateLinkServiceConnection -Name $BlobConnectionName -PrivateLinkService -GroupId blob
+$BlobConnection = New-AzPrivateLinkServiceConnection -Name $BlobConnectionName -PrivateLinkServiceId $StorageAccount.Id -GroupId blob
 
 # Create Files Private Link service connection
-$FilesConnection = New-AzPrivateLinkServiceConnection -Name $FilesConnectionName -PrivateLinkService -GroupId file
+$FilesConnection = New-AzPrivateLinkServiceConnection -Name $FilesConnectionName -PrivateLinkServiceId $StorageAccount.Id -GroupId file
+
+# Create Blob Private Endpoint IP configuration
+$BlobIPConfig = New-AzPrivateEndpointIpConfiguration -Name $BlobIPConfigName -GroupId blob -MemberName blob -PrivateIpAddress '10.0.0.5'
+
+# Create Files Private Endpoint IP configuration
+$FilesIPConfig = New-AzPrivateEndpointIpConfiguration -Name $FilesIPConfigName -GroupId file -MemberName file -PrivateIpAddress '10.0.0.6'
 
 # Create Blob Private Endpoint
-New-AzPrivateEndpoint -Name $BlobEndpointName -ResourceGroupName $ResourceGroupName -Location $Location -Subnet $Subnet -PrivateLinkServiceConnection $BlobConnection
+New-AzPrivateEndpoint -Name $BlobEndpointName -ResourceGroupName $ResourceGroupName -Location $Location -Subnet $Subnet -PrivateLinkServiceConnection $BlobConnection -IpConfiguration $BlobIPConfig
 
 # Create Files Private Endpoint
-New-AzPrivateEndpoint -Name $FilesEndpointName -ResourceGroupName $ResourceGroupName -Location $Location -Subnet $Subnet -PrivateLinkServiceConnection $FilesConnection
+New-AzPrivateEndpoint -Name $FilesEndpointName -ResourceGroupName $ResourceGroupName -Location $Location -Subnet $Subnet -PrivateLinkServiceConnection $FilesConnection -IpConfiguration $FilesIPConfig
 
 # Retrieve Private DNS zones
 $BlobDNSZone = Get-AzPrivateDnsZone -Name $BlobDNSZoneName -ResourceGroupName $ResourceGroupName
@@ -57,5 +65,8 @@ New-AzPrivateDnsZoneGroup -Name default -ResourceGroupName $ResourceGroupName -P
 New-AzPrivateDnsZoneGroup -Name default -ResourceGroupName $ResourceGroupName -PrivateEndpointName $FilesEndpointName -PrivateDnsZoneConfig $FilesDNSConfig
 
 # Verify Deployment
-# Hint: Get-AzPrivateEndpoint
-# Hint: Get-AzPrivateDnsZoneGroup
+foreach ($EndpointName in $BlobEndpointName, $FilesEndpointName) {
+    Get-AzPrivateEndpoint -Name $EndpointName -ResourceGroupName $ResourceGroupName | Format-Table Name, ProvisioningState
+    $DNSZoneGroup = Get-AzPrivateDnsZoneGroup -PrivateEndpointName $EndpointName -ResourceGroupName $ResourceGroupName
+    $DNSZoneGroup.PrivateDnsZoneConfigs.RecordSets | Select-Object RecordSetName, Fqdn, ProvisioningState, IpAddresses
+}
