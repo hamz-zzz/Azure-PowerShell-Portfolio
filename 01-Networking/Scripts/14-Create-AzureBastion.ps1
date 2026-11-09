@@ -1,16 +1,12 @@
 # Resource configuration
 $ResourceGroupName = 'rg-network-hub'
 $Location = 'eastus2'
+$BastionName = 'bastion-hub'
 
-# Virtual network configuration
+# Network configuration
 $VirtualNetworkName = 'vnet-hub'
 $BastionSubnetName = 'AzureBastionSubnet'
-
-# Public IP configuration
 $PublicIPName = 'pip-bastion-hub'
-
-# Azure Bastion configuration
-$BastionName = 'bastion-hub'
 
 # Retrieve hub virtual network
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName

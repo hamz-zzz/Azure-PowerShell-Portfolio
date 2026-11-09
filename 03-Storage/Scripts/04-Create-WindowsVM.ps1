@@ -2,14 +2,10 @@
 $ResourceGroupName = 'rg-storage'
 $Location = 'eastus2'
 
-# Virtual network configuration
+# Network Configuration
 $VirtualNetworkName = 'vnet-storage'
 $SubnetName = 'snet-storage'
-
-# Public IP configuration
 $PublicIPName = 'pip-windows'
-
-# Network interface configuration
 $NetworkInterfaceName = 'nic-windows'
 
 # Virtual machine configuration

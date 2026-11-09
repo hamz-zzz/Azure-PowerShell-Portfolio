@@ -1,7 +1,5 @@
 # Load Balancer configuration
 $LoadBalancerName = 'lb-web'
-
-# Resource configuration
 $ResourceGroupName = 'rg-compute-web'
 
 # Health probe configuration

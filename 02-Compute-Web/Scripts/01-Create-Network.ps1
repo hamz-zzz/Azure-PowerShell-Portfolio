@@ -14,7 +14,6 @@ $SubnetAddressPrefix = '10.0.0.0/24'
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
 # Create subnet configuration
-# Include DefaultOutboundAccess
 $Subnet = New-AzVirtualNetworkSubnetConfig -Name $SubnetName -AddressPrefix $SubnetAddressPrefix -DefaultOutboundAccess $true
 
 

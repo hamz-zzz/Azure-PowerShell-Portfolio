@@ -5,14 +5,10 @@ $Location = 'eastus2'
 # Network configuration
 $VirtualNetworkName = 'vnet-storage'
 $SubnetName = 'snet-storage'
-
-# Admin IP
 $AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
 
 # Network security group configuration
 $NSGName = 'nsg-storage'
-
-# RDP security rule configuration
 $RuleName = 'Allow-RDP'
 
 # Create network security rule

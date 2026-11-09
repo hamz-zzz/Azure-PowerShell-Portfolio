@@ -1,8 +1,6 @@
-# Storage account configuration
+# Resource configuration
 $StorageAccountName = 'storagehm2k'
 $ResourceGroupName = 'rg-storage'
-
-# Azure Files configuration
 $ShareName = 'labshare'
 
 # Retrieve storage account key

@@ -11,7 +11,6 @@ $RuleName = 'allow-dns'
 $RuleCollectionName = 'rc-workload-network'
 
 # Create network rule
-# Hint: New-AzFirewallNetworkRule
 $Rule = New-AzFirewallNetworkRule -Name $RuleName -SourceAddress $SourceAddress -DestinationAddress $DestinationAddress -Protocol UDP -DestinationPort 53
 
 # Create network rule collection

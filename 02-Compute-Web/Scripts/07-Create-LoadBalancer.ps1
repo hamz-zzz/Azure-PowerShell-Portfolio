@@ -1,8 +1,6 @@
 # Load Balancer configuration
 $LoadBalancerName = 'lb-web'
 $Location = 'eastus2'
-
-# Resource configuration
 $ResourceGroupName = 'rg-compute-web'
 
 # Public IP configuration

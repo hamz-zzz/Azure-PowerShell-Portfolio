@@ -18,7 +18,6 @@ $HTTPRuleName = 'Allow-HTTP'
 $HTTPRule = New-AzNetworkSecurityRuleConfig -Name $HTTPRuleName -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 80 -Protocol Tcp -Access Allow -Priority 100 -Direction Inbound
 
 # Create network security group
-# Hint: New-AzNetworkSecurityGroup
 $NSG = New-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName -Location $Location -SecurityRules $HTTPRule
 
 # Retrieve virtual network

@@ -1,7 +1,5 @@
-# Storage account configuration
+# Resource configuration
 $StorageAccountName = 'storagehm2k'
-
-# Blob container configuration
 $ContainerName = 'labcontainer'
 
 # Create storage context

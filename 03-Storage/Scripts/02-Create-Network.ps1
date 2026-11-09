@@ -1,12 +1,8 @@
 # Resource configuration
 $ResourceGroupName = 'rg-storage'
 $Location = 'eastus2'
-
-# Virtual network configuration
 $VirtualNetworkName = 'vnet-storage'
 $VirtualNetworkAddressPrefix = '10.0.0.0/16'
-
-# Subnet configuration
 $SubnetName = 'snet-storage'
 $SubnetAddressPrefix = '10.0.0.0/24'
 

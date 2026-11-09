@@ -1,16 +1,8 @@
 # Resource configuration
 $ResourceGroupName = 'rg-storage'
-
-# Storage account configuration
 $StorageAccountName = 'storagehm2k'
-
-# Blob container configuration
 $ContainerName = 'labcontainer'
-
-# Virtual machine configuration
 $VirtualMachineName = 'vm-windows'
-
-# RBAC configuration
 $RoleDefinitionName = 'Storage Blob Data Contributor'
 
 # Retrieve virtual machine

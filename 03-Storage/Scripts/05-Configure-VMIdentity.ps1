@@ -1,7 +1,5 @@
 # Resource configuration
 $ResourceGroupName = 'rg-storage'
-
-# Virtual machine configuration
 $VirtualMachineName = 'vm-windows'
 
 # Retrieve virtual machine

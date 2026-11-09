@@ -2,12 +2,8 @@
 $NSGName = 'nsg-workload'
 $ResourceGroupName = 'rg-network-workload'
 $Location = 'eastus2'
-
-# Network configuration
 $VirtualNetworkName = 'vnet-workload'
 $SubnetName = 'snet-workload'
-
-# Security rule configuration
 $BastionAddressPrefix = '10.0.0.128/26'
 $WorkloadAddressPrefix = '10.1.0.0/24'
 

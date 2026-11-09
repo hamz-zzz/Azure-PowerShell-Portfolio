@@ -1,7 +1,5 @@
 # DNS zone configuration
 $DNSZoneName = 'systemsbyhamza.com'
-
-# Resource configuration
 $ResourceGroupName = 'rg-compute-web'
 
 # Load Balancer public IP configuration

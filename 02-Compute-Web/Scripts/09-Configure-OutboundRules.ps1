@@ -1,7 +1,5 @@
-# Load Balancer configuration
-$LoadBalancerName = 'lb-web'
-
 # Resource configuration
+$LoadBalancerName = 'lb-web'
 $ResourceGroupName = 'rg-compute-web'
 $VirtualNetworkName = 'vnet-compute-web'
 $SubnetName = 'snet-web'

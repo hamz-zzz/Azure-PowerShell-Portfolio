@@ -1,10 +1,6 @@
-# Load Balancer configuration
-$LoadBalancerName = 'lb-web'
-
 # Resource configuration
 $ResourceGroupName = 'rg-compute-web'
-
-# Network security configuration
+$LoadBalancerName = 'lb-web'
 $NSGName = 'nsg-web'
 
 # Administrative access configuration

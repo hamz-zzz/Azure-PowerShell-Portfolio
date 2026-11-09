@@ -4,8 +4,6 @@ $ResourceGroupName = 'rg-network-hub'
 
 # Log Analytics configuration
 $WorkspaceName = 'law-network-hub'
-
-# Diagnostic setting configuration
 $DiagnosticSettingName = 'diag-azfw-hub'
 
 # Log configuration
