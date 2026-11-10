@@ -24,4 +24,5 @@ New-AzRoleAssignment -RoleDefinitionName $RoleDefinitionName -ObjectId $VirtualM
 # Assign role to current user
 New-AzRoleAssignment -RoleDefinitionName $RoleDefinitionName -ObjectId $User.Id -Scope $Scope
 
+# Verify Deployment
 Get-AzRoleAssignment -Scope $Scope -RoleDefinitionName $RoleDefinitionName | Select-Object DisplayName, ObjectType, ObjectId, RoleDefinitionName, @{Name = 'Container'; Expression = {Split-Path $_.Scope -Leaf}} | Format-Table

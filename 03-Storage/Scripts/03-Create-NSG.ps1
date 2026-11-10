@@ -17,11 +17,12 @@ $Rule = New-AzNetworkSecurityRuleConfig -Name $RuleName -Priority 100 -Protocol 
 # Create network security group
 $NSG = New-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName -Location $Location -SecurityRules $Rule
 
-# Retrieve virtual network
+# Retrieve virtual network and subnet
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName
 
 # Associate NSG with subnet
-Set-AzVirtualNetworkSubnetConfig -Name $SubnetName -VirtualNetwork $VirtualNetwork -AddressPrefix $SubnetAddressPrefix -NetworkSecurityGroup $NSG
+Set-AzVirtualNetworkSubnetConfig -Name $SubnetName -VirtualNetwork $VirtualNetwork -AddressPrefix $Subnet.AddressPrefix -NetworkSecurityGroup $NSG
 
 # Apply virtual network configuration
 Set-AzVirtualNetwork -VirtualNetwork $VirtualNetwork
