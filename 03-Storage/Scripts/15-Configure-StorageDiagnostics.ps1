@@ -25,6 +25,6 @@ New-AzDiagnosticSetting -Name $BlobDiagnosticName -ResourceId "$($StorageAccount
 New-AzDiagnosticSetting -Name $FilesDiagnosticName -ResourceId "$($StorageAccount.Id)/fileServices/default" -WorkspaceId $Workspace.ResourceId -Log $Log -LogAnalyticsDestinationType Dedicated
 
 # Verify Deployment
-Get-AzOperationalInsightsWorkspace -Name $WorkspaceName -ResourceGroupName $ResourceGroupName
-Get-AzDiagnosticSetting -ResourceId "$($StorageAccount.Id)/blobServices/default"
-Get-AzDiagnosticSetting -ResourceId "$($StorageAccount.Id)/fileServices/default"
+Get-AzOperationalInsightsWorkspace -Name $WorkspaceName -ResourceGroupName $ResourceGroupName | Select-Object Name, Location, RetentionInDays, ProvisioningState
+Get-AzDiagnosticSetting -ResourceId "$($StorageAccount.Id)/blobServices/default" | Format-List Name, WorkspaceId, Log
+Get-AzDiagnosticSetting -ResourceId "$($StorageAccount.Id)/fileServices/default" | Format-List Name, WorkspaceId, Log
