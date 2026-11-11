@@ -3,6 +3,7 @@ $ResourceGroupName = 'rg-storage'
 $VirtualNetworkName = 'vnet-storage'
 $SubnetName = 'snet-storage'
 $StorageAccountName = 'storagehm2k'
+$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
 
 # Retrieve virtual network
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
@@ -16,8 +17,9 @@ Set-AzVirtualNetworkSubnetConfig -Name $Subnet.Name -VirtualNetwork $VirtualNetw
 # Apply virtual network configuration
 Set-AzVirtualNetwork -VirtualNetwork $VirtualNetwork
 
-# Add subnet to Storage Account network rules
+# Add subnet and admin IP to Storage Account network rules
 Add-AzStorageAccountNetworkRule -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -VirtualNetworkResourceId $Subnet.Id
+Add-AzStorageAccountNetworkRule -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -IPAddressOrRange "$AdminPublicIP/32"
 
 # Set Storage Account default network action to Deny
 Update-AzStorageAccountNetworkRuleSet -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -DefaultAction Deny
@@ -26,3 +28,4 @@ Update-AzStorageAccountNetworkRuleSet -Name $StorageAccountName -ResourceGroupNa
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
 ($VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName).ServiceEndpoints
 (Get-AzStorageAccountNetworkRuleSet -Name $StorageAccountName -ResourceGroupName $ResourceGroupName).VirtualNetworkRules | Select-Object Action, @{Name = 'Subnet'; Expression = { Split-Path $_.VirtualNetworkResourceId -Leaf }}
+(Get-AzStorageAccountNetworkRuleSet -Name $StorageAccountName -ResourceGroupName $ResourceGroupName).IpRules | Select-Object Action, IPAddressOrRange
