@@ -1,2 +1,0 @@
-Azure Storage Project 03
-Sample file for Blob Storage and Azure Files testing.
