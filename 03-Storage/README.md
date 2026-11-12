@@ -24,27 +24,38 @@ The resources are deployed to `rg-storage` in East US 2. In the final configurat
 The VNet and subnet are created with separate address prefixes. The deployment then retrieves the VNet to verify its address space and subnet configuration:
 
 ```powershell
+$ResourceGroupName = 'rg-storage'
+$Location = 'eastus2'
+$VirtualNetworkName = 'vnet-storage'
 $VirtualNetworkAddressPrefix = '10.0.0.0/16'
+$SubnetName = 'snet-storage'
 $SubnetAddressPrefix = '10.0.0.0/24'
 
-$Subnet = New-AzVirtualNetworkSubnetConfig -Name 'snet-storage' -AddressPrefix $SubnetAddressPrefix
-$VirtualNetwork = New-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage' -Location 'eastus2' -AddressPrefix $VirtualNetworkAddressPrefix -Subnet $Subnet
+$Subnet = New-AzVirtualNetworkSubnetConfig -Name $SubnetName -AddressPrefix $SubnetAddressPrefix
+New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName -Location $Location -AddressPrefix $VirtualNetworkAddressPrefix -Subnet $Subnet
 
-Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage' |
-    Select-Object Name, AddressSpace, Subnets
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+$VirtualNetwork.AddressSpace | Format-List AddressPrefixes
+$VirtualNetwork.Subnets | Format-List Name, AddressPrefix
 ```
 
 The VM and both Private Endpoints share `snet-storage`. The NSG allows RDP only from my current public IPv4 address, retrieved at deployment time and applied as a `/32` source prefix:
 
 ```powershell
+$ResourceGroupName = 'rg-storage'
+$Location = 'eastus2'
+$VirtualNetworkName = 'vnet-storage'
+$SubnetName = 'snet-storage'
 $AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
-$Rule = New-AzNetworkSecurityRuleConfig -Name 'Allow-RDP' -Priority 100 -Protocol Tcp -SourceAddressPrefix "$AdminPublicIP/32" -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389 -Access Allow -Direction Inbound
+$NSGName = 'nsg-storage'
+$RuleName = 'Allow-RDP'
 
-$NSG = New-AzNetworkSecurityGroup -Name 'nsg-storage' -ResourceGroupName 'rg-storage' -Location 'eastus2' -SecurityRules $Rule
-$VirtualNetwork = Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage'
-$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq 'snet-storage'
+$Rule = New-AzNetworkSecurityRuleConfig -Name $RuleName -Priority 100 -Protocol Tcp -SourceAddressPrefix "$AdminPublicIP/32" -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389 -Access Allow -Direction Inbound
+$NSG = New-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName -Location $Location -SecurityRules $Rule
 
-Set-AzVirtualNetworkSubnetConfig -Name $Subnet.Name -VirtualNetwork $VirtualNetwork -AddressPrefix $Subnet.AddressPrefix -NetworkSecurityGroup $NSG
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName
+Set-AzVirtualNetworkSubnetConfig -Name $SubnetName -VirtualNetwork $VirtualNetwork -AddressPrefix $Subnet.AddressPrefix -NetworkSecurityGroup $NSG
 Set-AzVirtualNetwork -VirtualNetwork $VirtualNetwork
 ```
 
@@ -60,20 +71,34 @@ Set-AzVirtualNetwork -VirtualNetwork $VirtualNetwork
 The deployment retrieves the VNet and subnet, creates the public IP and NIC, builds the Windows Server VM configuration, and deploys the VM:
 
 ```powershell
-$VirtualNetwork = Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage'
-$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq 'snet-storage'
-$Credential = Get-Credential
+$ResourceGroupName = 'rg-storage'
+$Location = 'eastus2'
+$VirtualNetworkName = 'vnet-storage'
+$SubnetName = 'snet-storage'
+$PublicIPName = 'pip-windows'
+$NetworkInterfaceName = 'nic-windows'
+$VMName = 'vm-windows'
+$VMSize = 'Standard_B2s_v2'
+$Publisher = 'MicrosoftWindowsServer'
+$Offer = 'WindowsServer'
+$SKU = '2022-datacenter'
+$Version = 'latest'
+$OSDiskName = 'disk-windows'
 
-$PublicIP = New-AzPublicIpAddress -Name 'pip-windows' -ResourceGroupName 'rg-storage' -Location 'eastus2' -AllocationMethod Static
-$NetworkInterface = New-AzNetworkInterface -Name 'nic-windows' -ResourceGroupName 'rg-storage' -Location 'eastus2' -PrivateIpAddress '10.0.0.4' -Subnet $Subnet -PublicIpAddress $PublicIP
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName
+$Credential = Get-Credential -Message 'Enter the local administrator credentials for the Azure VM'
 
-$VMConfig = New-AzVMConfig -VMName 'vm-windows' -VMSize 'Standard_B2s_v2'
-Set-AzVMOperatingSystem -VM $VMConfig -ComputerName 'vm-windows' -Credential $Credential -Windows
-Set-AzVMSourceImage -VM $VMConfig -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2022-datacenter' -Version 'latest'
-Set-AzVMOSDisk -VM $VMConfig -Name 'disk-windows' -StorageAccountType StandardSSD_LRS -CreateOption FromImage
+$PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
+$NetworkInterface = New-AzNetworkInterface -Name $NetworkInterfaceName -ResourceGroupName $ResourceGroupName -Location $Location -PrivateIpAddress '10.0.0.4' -Subnet $Subnet -PublicIpAddress $PublicIP
+
+$VMConfig = New-AzVMConfig -VMName $VMName -VMSize $VMSize
+Set-AzVMOperatingSystem -VM $VMConfig -ComputerName $VMName -Credential $Credential -Windows
+Set-AzVMSourceImage -VM $VMConfig -PublisherName $Publisher -Offer $Offer -Skus $SKU -Version $Version
+Set-AzVMOSDisk -VM $VMConfig -Name $OSDiskName -StorageAccountType StandardSSD_LRS -CreateOption FromImage
 Set-AzVMBootDiagnostic -VM $VMConfig -Enable
 Add-AzVMNetworkInterface -VM $VMConfig -Id $NetworkInterface.Id
-New-AzVM -VM $VMConfig -ResourceGroupName 'rg-storage' -Location 'eastus2'
+New-AzVM -VM $VMConfig -ResourceGroupName $ResourceGroupName -Location $Location
 ```
 
 During deployment, `Get-Credential` prompts for the local administrator credentials and Boot Diagnostics uses Microsoft-managed storage. A separate script enables the VM's system-assigned managed identity for Blob data access.
@@ -97,30 +122,39 @@ The account contains a Blob container and an Azure Files share:
 The Storage Account is created as a general-purpose v2 account with Standard locally redundant storage. The returned resource is followed by a query to verify its configuration:
 
 ```powershell
-$StorageAccount = New-AzStorageAccount -Name 'storagehm2k' -ResourceGroupName 'rg-storage' -Location 'eastus2' -Kind StorageV2 -SkuName Standard_LRS
+$StorageAccountName = 'storagehm2k'
+$ResourceGroupName = 'rg-storage'
+$Location = 'eastus2'
 
-Get-AzStorageAccount -Name 'storagehm2k' -ResourceGroupName 'rg-storage' |
-    Select-Object StorageAccountName, Location, Kind, AccessTier
+New-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -Location $Location -Kind StorageV2 -SkuName Standard_LRS
+
+$StorageAccount = Get-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName
+$StorageAccount | Format-Table StorageAccountName, Location, Kind, AccessTier
+$StorageAccount.Sku | Format-Table Name, Tier
 ```
 
 The Blob container is created using a Storage context authenticated with the signed-in Entra ID account:
 
 ```powershell
-$Context = New-AzStorageContext -StorageAccountName 'storagehm2k' -UseConnectedAccount
-New-AzStorageContainer -Name 'labcontainer' -Context $Context
+$StorageAccountName = 'storagehm2k'
+$ContainerName = 'labcontainer'
 
-Get-AzStorageContainer -Name 'labcontainer' -Context $Context
+$Context = New-AzStorageContext -StorageAccountName $StorageAccountName -UseConnectedAccount
+New-AzStorageContainer -Name $ContainerName -Context $Context
 ```
 
 Azure Files is configured separately. The share is created using a Storage context authenticated with a Storage Account key:
 
 ```powershell
-$StorageAccountKey = (Get-AzStorageAccountKey -Name 'storagehm2k' -ResourceGroupName 'rg-storage' |
-    Where-Object KeyName -eq 'key1').Value
-$Context = New-AzStorageContext -StorageAccountName 'storagehm2k' -StorageAccountKey $StorageAccountKey
+$StorageAccountName = 'storagehm2k'
+$ResourceGroupName = 'rg-storage'
+$ShareName = 'labshare'
 
-New-AzStorageShare -Name 'labshare' -Context $Context
-Get-AzStorageShare -Name 'labshare' -Context $Context
+$StorageAccountKey = (Get-AzStorageAccountKey -Name $StorageAccountName -ResourceGroupName $ResourceGroupName |
+    Where-Object KeyName -eq 'key1').Value
+$Context = New-AzStorageContext -StorageAccountName $StorageAccountName -StorageAccountKey $StorageAccountKey
+
+New-AzStorageShare -Name $ShareName -Context $Context
 ```
 
 **Scripts:** [Create Storage Account](Scripts/06-Create-StorageAccount.ps1) · [Create Blob container](Scripts/07-Create-BlobContainer.ps1) · [Create Azure Files share](Scripts/08-Create-AzureFilesShare.ps1)
@@ -135,14 +169,20 @@ Blob data access uses Microsoft Entra ID rather than a Storage Account key. I as
 The script retrieves the VM managed identity, identifies the signed-in Entra ID user, and constructs the container resource ID for the RBAC scope. It then assigns the role to both identities and checks the resulting assignments:
 
 ```powershell
-$VirtualMachine = Get-AzVM -Name 'vm-windows' -ResourceGroupName 'rg-storage'
+$ResourceGroupName = 'rg-storage'
+$StorageAccountName = 'storagehm2k'
+$ContainerName = 'labcontainer'
+$VirtualMachineName = 'vm-windows'
+$RoleDefinitionName = 'Storage Blob Data Contributor'
+
+$VirtualMachine = Get-AzVM -Name $VirtualMachineName -ResourceGroupName $ResourceGroupName
 $UserContext = Get-AzContext
 $User = Get-AzADUser -UserPrincipalName $UserContext.Account.Id
-$StorageAccount = Get-AzStorageAccount -Name 'storagehm2k' -ResourceGroupName 'rg-storage'
-$Scope = "$($StorageAccount.Id)/blobServices/default/containers/labcontainer"
+$StorageAccount = Get-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName
+$Scope = "$($StorageAccount.Id)/blobServices/default/containers/$ContainerName"
 
-New-AzRoleAssignment -RoleDefinitionName 'Storage Blob Data Contributor' -ObjectId $VirtualMachine.Identity.PrincipalId -Scope $Scope
-New-AzRoleAssignment -RoleDefinitionName 'Storage Blob Data Contributor' -ObjectId $User.Id -Scope $Scope
+New-AzRoleAssignment -RoleDefinitionName $RoleDefinitionName -ObjectId $VirtualMachine.Identity.PrincipalId -Scope $Scope
+New-AzRoleAssignment -RoleDefinitionName $RoleDefinitionName -ObjectId $User.Id -Scope $Scope
 ```
 
 Scoping the role assignment to `labcontainer` keeps the data permissions limited to that container. When the VM accesses Blob Storage, it can obtain a token through its managed identity rather than using a long-lived Storage Account key stored in its configuration.
@@ -173,14 +213,20 @@ Before implementing Private Link, a `Microsoft.Storage` service endpoint was con
 The script retrieves the VNet and subnet, enables the `Microsoft.Storage` service endpoint, adds the subnet and my public IP to the Storage Account firewall, and sets the default network action to `Deny`:
 
 ```powershell
-$VirtualNetwork = Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage'
-$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq 'snet-storage'
+$ResourceGroupName = 'rg-storage'
+$VirtualNetworkName = 'vnet-storage'
+$SubnetName = 'snet-storage'
+$StorageAccountName = 'storagehm2k'
+$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
+
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName
 
 Set-AzVirtualNetworkSubnetConfig -Name $Subnet.Name -VirtualNetwork $VirtualNetwork -AddressPrefix $Subnet.AddressPrefix -NetworkSecurityGroup $Subnet.NetworkSecurityGroup -ServiceEndpoint Microsoft.Storage
 Set-AzVirtualNetwork -VirtualNetwork $VirtualNetwork
-Add-AzStorageAccountNetworkRule -Name 'storagehm2k' -ResourceGroupName 'rg-storage' -VirtualNetworkResourceId $Subnet.Id
-Add-AzStorageAccountNetworkRule -Name 'storagehm2k' -ResourceGroupName 'rg-storage' -IPAddressOrRange $AdminPublicIP
-Update-AzStorageAccountNetworkRuleSet -Name 'storagehm2k' -ResourceGroupName 'rg-storage' -DefaultAction Deny
+Add-AzStorageAccountNetworkRule -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -VirtualNetworkResourceId $Subnet.Id
+Add-AzStorageAccountNetworkRule -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -IPAddressOrRange "$AdminPublicIP"
+Update-AzStorageAccountNetworkRuleSet -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -DefaultAction Deny
 ```
 
 I used the service endpoint as a comparison with Private Link. It provides subnet-based access to the public Storage endpoint, but does not assign a private IP. Private Link instead provides a private IP for each selected Storage subresource. This service endpoint configuration is an earlier comparison exercise, not part of the final access path.
@@ -209,28 +255,57 @@ Inside the VNet, DNS follows a CNAME chain from the normal service FQDN to its c
 The DNS script retrieves `vnet-storage`, creates the two service-specific private DNS zones, links both zones to the VNet, and verifies the zones and links:
 
 ```powershell
-$VirtualNetwork = Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage'
-New-AzPrivateDnsZone -Name 'privatelink.blob.core.windows.net' -ResourceGroupName 'rg-storage'
-New-AzPrivateDnsZone -Name 'privatelink.file.core.windows.net' -ResourceGroupName 'rg-storage'
+$ResourceGroupName = 'rg-storage'
+$VirtualNetworkName = 'vnet-storage'
+$BlobDNSZoneName = 'privatelink.blob.core.windows.net'
+$FilesDNSZoneName = 'privatelink.file.core.windows.net'
+$BlobDNSLinkName = 'link-blob-storage-vnet'
+$FilesDNSLinkName = 'link-file-storage-vnet'
 
-New-AzPrivateDnsVirtualNetworkLink -Name 'link-blob-storage-vnet' -ZoneName 'privatelink.blob.core.windows.net' -VirtualNetwork $VirtualNetwork -ResourceGroupName 'rg-storage'
-New-AzPrivateDnsVirtualNetworkLink -Name 'link-file-storage-vnet' -ZoneName 'privatelink.file.core.windows.net' -VirtualNetwork $VirtualNetwork -ResourceGroupName 'rg-storage'
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+New-AzPrivateDnsZone -Name $BlobDNSZoneName -ResourceGroupName $ResourceGroupName
+New-AzPrivateDnsZone -Name $FilesDNSZoneName -ResourceGroupName $ResourceGroupName
+
+New-AzPrivateDnsVirtualNetworkLink -Name $BlobDNSLinkName -ZoneName $BlobDNSZoneName -VirtualNetwork $VirtualNetwork -ResourceGroupName $ResourceGroupName
+New-AzPrivateDnsVirtualNetworkLink -Name $FilesDNSLinkName -ZoneName $FilesDNSZoneName -VirtualNetwork $VirtualNetwork -ResourceGroupName $ResourceGroupName
 ```
 
 The endpoint script retrieves the VNet, subnet, Storage Account, and private DNS zones. It creates a service connection and static IP configuration for each Storage subresource, deploys both endpoints, associates each endpoint with its DNS zone, and verifies endpoint provisioning and DNS records:
 
 ```powershell
-$StorageAccount = Get-AzStorageAccount -Name 'storagehm2k' -ResourceGroupName 'rg-storage'
-$Subnet = (Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage').Subnets |
-    Where-Object Name -eq 'snet-storage'
+$ResourceGroupName = 'rg-storage'
+$Location = 'eastus2'
+$VirtualNetworkName = 'vnet-storage'
+$SubnetName = 'snet-storage'
+$StorageAccountName = 'storagehm2k'
+$BlobConnectionName = 'blob-connection'
+$FilesConnectionName = 'files-connection'
+$BlobEndpointName = 'private-endpoint-blob'
+$FilesEndpointName = 'private-endpoint-files'
+$BlobIPConfigName = 'blob-ipconfig'
+$FilesIPConfigName = 'files-ipconfig'
+$BlobDNSZoneName = 'privatelink.blob.core.windows.net'
+$FilesDNSZoneName = 'privatelink.file.core.windows.net'
 
-$BlobConnection = New-AzPrivateLinkServiceConnection -Name 'blob-connection' -PrivateLinkServiceId $StorageAccount.Id -GroupId blob
-$FilesConnection = New-AzPrivateLinkServiceConnection -Name 'files-connection' -PrivateLinkServiceId $StorageAccount.Id -GroupId file
-$BlobIPConfig = New-AzPrivateEndpointIpConfiguration -Name 'blob-ipconfig' -GroupId blob -MemberName blob -PrivateIpAddress '10.0.0.5'
-$FilesIPConfig = New-AzPrivateEndpointIpConfiguration -Name 'files-ipconfig' -GroupId file -MemberName file -PrivateIpAddress '10.0.0.6'
+$VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName
+$Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName
+$StorageAccount = Get-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName
 
-New-AzPrivateEndpoint -Name 'private-endpoint-blob' -ResourceGroupName 'rg-storage' -Location 'eastus2' -Subnet $Subnet -PrivateLinkServiceConnection $BlobConnection -IpConfiguration $BlobIPConfig
-New-AzPrivateEndpoint -Name 'private-endpoint-files' -ResourceGroupName 'rg-storage' -Location 'eastus2' -Subnet $Subnet -PrivateLinkServiceConnection $FilesConnection -IpConfiguration $FilesIPConfig
+$BlobConnection = New-AzPrivateLinkServiceConnection -Name $BlobConnectionName -PrivateLinkServiceId $StorageAccount.Id -GroupId blob
+$FilesConnection = New-AzPrivateLinkServiceConnection -Name $FilesConnectionName -PrivateLinkServiceId $StorageAccount.Id -GroupId file
+$BlobIPConfig = New-AzPrivateEndpointIpConfiguration -Name $BlobIPConfigName -GroupId blob -MemberName blob -PrivateIpAddress '10.0.0.5'
+$FilesIPConfig = New-AzPrivateEndpointIpConfiguration -Name $FilesIPConfigName -GroupId file -MemberName file -PrivateIpAddress '10.0.0.6'
+
+New-AzPrivateEndpoint -Name $BlobEndpointName -ResourceGroupName $ResourceGroupName -Location $Location -Subnet $Subnet -PrivateLinkServiceConnection $BlobConnection -IpConfiguration $BlobIPConfig
+New-AzPrivateEndpoint -Name $FilesEndpointName -ResourceGroupName $ResourceGroupName -Location $Location -Subnet $Subnet -PrivateLinkServiceConnection $FilesConnection -IpConfiguration $FilesIPConfig
+
+$BlobDNSZone = Get-AzPrivateDnsZone -Name $BlobDNSZoneName -ResourceGroupName $ResourceGroupName
+$FilesDNSZone = Get-AzPrivateDnsZone -Name $FilesDNSZoneName -ResourceGroupName $ResourceGroupName
+$BlobDNSConfig = New-AzPrivateDnsZoneConfig -Name default -PrivateDnsZoneId $BlobDNSZone.ResourceId
+$FilesDNSConfig = New-AzPrivateDnsZoneConfig -Name default -PrivateDnsZoneId $FilesDNSZone.ResourceId
+
+New-AzPrivateDnsZoneGroup -Name default -ResourceGroupName $ResourceGroupName -PrivateEndpointName $BlobEndpointName -PrivateDnsZoneConfig $BlobDNSConfig
+New-AzPrivateDnsZoneGroup -Name default -ResourceGroupName $ResourceGroupName -PrivateEndpointName $FilesEndpointName -PrivateDnsZoneConfig $FilesDNSConfig
 ```
 
 Each endpoint is associated with its DNS zone through a DNS zone group. Azure maintains the records mapping the Storage service hostnames to the endpoint's private IP address.
@@ -264,8 +339,10 @@ The VM successfully connects to TCP 443 for Blob Storage and TCP 445 for Azure F
 After validating the Private Endpoints and DNS resolution, public network access was disabled on `storagehm2k`:
 
 ```powershell
-Set-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -PublicNetworkAccess Disabled
+$ResourceGroupName = 'rg-storage'
+$StorageAccountName = 'storagehm2k'
 
+Set-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -PublicNetworkAccess Disabled
 Get-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName |
     Select-Object StorageAccountName, PublicNetworkAccess
 ```
@@ -298,6 +375,9 @@ The laptop cannot use the VNet's private DNS resolution, and the Storage Account
 `vm-windows` connects to `labshare` over SMB through the Files Private Endpoint. The script prompts for the Storage Account key at runtime before mapping the share as a persistent PowerShell drive:
 
 ```powershell
+$StorageAccountName = 'storagehm2k'
+$ShareName = 'labshare'
+
 $StorageAccountKey = Read-Host 'Storage account key' -AsSecureString
 $Credential = [PSCredential]::new("localhost\$StorageAccountName", $StorageAccountKey)
 New-PSDrive -Name Z -PSProvider FileSystem -Root "\\$StorageAccountName.file.core.windows.net\$ShareName" -Credential $Credential -Persist
@@ -328,16 +408,37 @@ The test confirms that the mapped share supports both file writes and reads.
 Blob versioning and seven-day soft delete are enabled for blobs, containers, and Azure Files shares. Versioning retains previous Blob versions, while soft delete provides a recovery window for deleted data.
 
 ```powershell
-$BlobProperties = Get-AzStorageBlobServiceProperty -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage'
-$FileProperties = Get-AzStorageFileServiceProperty -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage'
+$ResourceGroupName = 'rg-storage'
+$StorageAccountName = 'storagehm2k'
 
-Update-AzStorageBlobServiceProperty -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage' -IsVersioningEnabled $true
-Enable-AzStorageBlobDeleteRetentionPolicy -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage' -RetentionDays 7
-Enable-AzStorageContainerDeleteRetentionPolicy -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage' -RetentionDays 7
-Update-AzStorageFileServiceProperty -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage' -EnableShareDeleteRetentionPolicy $true -ShareRetentionDays 7
+$BlobProperties = Get-AzStorageBlobServiceProperty -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName
+$FileProperties = Get-AzStorageFileServiceProperty -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName
 
-Get-AzStorageBlobServiceProperty -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage'
-Get-AzStorageFileServiceProperty -StorageAccountName 'storagehm2k' -ResourceGroupName 'rg-storage'
+if (-not $BlobProperties.IsVersioningEnabled) {
+    Update-AzStorageBlobServiceProperty -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName -IsVersioningEnabled $true
+}
+if (-not $BlobProperties.DeleteRetentionPolicy.Enabled -or $BlobProperties.DeleteRetentionPolicy.Days -ne 7) {
+    Enable-AzStorageBlobDeleteRetentionPolicy -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName -RetentionDays 7
+}
+if (-not $BlobProperties.ContainerDeleteRetentionPolicy.Enabled -or $BlobProperties.ContainerDeleteRetentionPolicy.Days -ne 7) {
+    Enable-AzStorageContainerDeleteRetentionPolicy -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName -RetentionDays 7
+}
+if (-not $FileProperties.ShareDeleteRetentionPolicy.Enabled -or $FileProperties.ShareDeleteRetentionPolicy.Days -ne 7) {
+    Update-AzStorageFileServiceProperty -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName -EnableShareDeleteRetentionPolicy $true -ShareRetentionDays 7
+}
+
+$BlobProperties = Get-AzStorageBlobServiceProperty -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName
+$FileProperties = Get-AzStorageFileServiceProperty -StorageAccountName $StorageAccountName -ResourceGroupName $ResourceGroupName
+
+[PSCustomObject]@{
+    BlobVersioning       = $BlobProperties.IsVersioningEnabled
+    BlobSoftDelete       = $BlobProperties.DeleteRetentionPolicy.Enabled
+    BlobRetentionDays    = $BlobProperties.DeleteRetentionPolicy.Days
+    ContainerSoftDelete  = $BlobProperties.ContainerDeleteRetentionPolicy.Enabled
+    ContainerRetention   = $BlobProperties.ContainerDeleteRetentionPolicy.Days
+    FilesSoftDelete      = $FileProperties.ShareDeleteRetentionPolicy.Enabled
+    FilesRetentionDays   = $FileProperties.ShareDeleteRetentionPolicy.Days
+} | Format-List
 ```
 
 **Script:** [Configure Storage data protection](Scripts/14-Configure-StorageProtection.ps1)
