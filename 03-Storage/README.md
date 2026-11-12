@@ -98,7 +98,7 @@ New-AzStorageShare -Name $ShareName -Context $Context
 
 ## Blob authorization with Microsoft Entra ID
 
-Blob data access uses Microsoft Entra ID rather than a Storage Account key. I assigned `Storage Blob Data Contributor` at the `labcontainer` scope to the VM's system-assigned managed identity and my Entra ID account. This permits testing from both identities without using account keys for Blob authorization.
+Blob data access uses Microsoft Entra ID rather than a Storage Account key. I assigned the `Storage Blob Data Contributor` role at the `labcontainer` scope to two identities: the VM's system-assigned managed identity and my Entra ID user account, Hamza Mahmood (`hamza@hamzamahmood2k.onmicrosoft.com`). This allows me to validate Blob access using both identities without relying on Storage Account keys for Blob authorization.
 
 The role assignment uses the container resource ID as its scope:
 
