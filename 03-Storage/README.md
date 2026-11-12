@@ -6,7 +6,7 @@
 
 This project deploys and secures an Azure Storage Account containing Blob Storage and Azure Files, with Azure PowerShell used throughout. The work covers resource provisioning, data-plane authorization, network restrictions, Private Link, and data protection.
 
-A Windows Server 2022 VM provides an internal client for Blob access, Azure Files over SMB, and private DNS testing. I retained its public IP for RDP administration and restricted inbound access to my current public IPv4 address.
+A Windows Server 2022 VM provides an internal client for Blob access, Azure Files over SMB, and private DNS testing. Its public IP is retained for RDP administration, with inbound access restricted to the current public IPv4 address.
 
 The resources are deployed to `rg-storage` in East US 2. In the final configuration, both Storage services use Private Endpoints and public network access is disabled on the Storage Account.
 
@@ -164,7 +164,7 @@ New-AzStorageShare -Name $ShareName -Context $Context
 
 ## Blob authorization with Microsoft Entra ID
 
-Blob data access uses Microsoft Entra ID rather than a Storage Account key. I assigned the `Storage Blob Data Contributor` role at the `labcontainer` scope to two identities: the VM's system-assigned managed identity and my Entra ID user account, Hamza Mahmood (`hamza@hamzamahmood2k.onmicrosoft.com`). This allows me to validate Blob access using both identities without relying on Storage Account keys for Blob authorization.
+Blob data access uses Microsoft Entra ID rather than a Storage Account key. The `Storage Blob Data Contributor` role is assigned at the `labcontainer` scope to two identities: the VM's system-assigned managed identity and the Entra ID user account, Hamza Mahmood (`hamza@hamzamahmood2k.onmicrosoft.com`). This enables Blob access validation using both identities without relying on Storage Account keys for Blob authorization.
 
 The script retrieves the VM managed identity, identifies the signed-in Entra ID user, and constructs the container resource ID for the RBAC scope. It then assigns the role to both identities and checks the resulting assignments:
 
@@ -229,7 +229,7 @@ Add-AzStorageAccountNetworkRule -Name $StorageAccountName -ResourceGroupName $Re
 Update-AzStorageAccountNetworkRuleSet -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -DefaultAction Deny
 ```
 
-I used the service endpoint as a comparison with Private Link. It provides subnet-based access to the public Storage endpoint, but does not assign a private IP. Private Link instead provides a private IP for each selected Storage subresource. This service endpoint configuration is an earlier comparison exercise, not part of the final access path.
+The service endpoint provides subnet-based access to the public Storage endpoint without assigning a private IP. Private Link instead assigns a private IP to each selected Storage subresource. The service endpoint configuration serves as an earlier comparison exercise and is not part of the final access path.
 
 **Script:** [Configure Storage service endpoint and network rules](Scripts/10-Configure-StorageServiceEndpoint.ps1)
 
@@ -355,7 +355,7 @@ This leaves Private Link as the Storage Account's access path. The service endpo
 
 ![Storage public network access disabled](Screenshots/23-Storage-Public-Network-Access-Disabled.png)
 
-I used AzCopy to validate the final access model. From `vm-windows`, the standard Blob FQDN resolves through the `privatelink` CNAME to `10.0.0.5`, and the transfer succeeds through the Private Endpoint. From the laptop, the public endpoint request is blocked because public network access is disabled.
+AzCopy was used to validats the final access model. From vm-windows, the standard Blob FQDN resolves through the privatelink CNAME to 10.0.0.5, and the transfer succeeds through the Private Endpoint. From the laptop, requests to the public endpoint are blocked because public network access is disabled.
 
 ### AzCopy transfer through the Blob Private Endpoint
 
@@ -365,7 +365,7 @@ The successful transfer confirms private DNS resolution, endpoint connectivity, 
 
 ### Public endpoint access blocked from my laptop
 
-![Public endpoint access blocked from the laptop](Screenshots/25-Laptop-AzCopy-Public-Endpoint-Blocked.png)
+![Public endpoint access blocked from my laptop](Screenshots/25-Laptop-AzCopy-Public-Endpoint-Blocked.png)
 
 The laptop cannot use the VNet's private DNS resolution, and the Storage Account's public endpoint is disabled, so the request is blocked.
 
