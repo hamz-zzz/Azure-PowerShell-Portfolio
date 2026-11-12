@@ -34,7 +34,7 @@ Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage' |
     Select-Object Name, AddressSpace, Subnets
 ```
 
-The VM and both Private Endpoints share `snet-storage`. The NSG allows RDP only from the administrator's current public IPv4 address, retrieved at deployment time and applied as a `/32` source prefix:
+The VM and both Private Endpoints share `snet-storage`. The NSG allows RDP only from my current public IPv4 address, retrieved at deployment time and applied as a `/32` source prefix:
 
 ```powershell
 $AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
@@ -170,7 +170,7 @@ The request is denied because its source IP is not allowed by the Storage Accoun
 
 Before implementing Private Link, a `Microsoft.Storage` service endpoint was configured on `snet-storage`, and the subnet and administrator public IP were added to the Storage Account firewall. The default network action is `Deny`.
 
-The script retrieves the VNet and subnet, enables the `Microsoft.Storage` service endpoint, adds the subnet and administrator public IP to the Storage Account firewall, and sets the default network action to `Deny`:
+The script retrieves the VNet and subnet, enables the `Microsoft.Storage` service endpoint, adds the subnet and my public IP to the Storage Account firewall, and sets the default network action to `Deny`:
 
 ```powershell
 $VirtualNetwork = Get-AzVirtualNetwork -Name 'vnet-storage' -ResourceGroupName 'rg-storage'
