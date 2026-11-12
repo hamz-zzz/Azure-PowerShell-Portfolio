@@ -1,0 +1,127 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="page-1">
+    <mxGraphModel dx="2235" dy="1336" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontColor=#12304A;" value="Project 03 — Azure Storage &amp; Private Connectivity" vertex="1">
+          <mxGeometry height="38" width="1400" x="35" y="18" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontColor=#526579;" value="Private storage access from an Azure workload · Public network access disabled" vertex="1">
+          <mxGeometry height="25" width="1400" x="38" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="internet" parent="1" style="rounded=1;arcSize=18;whiteSpace=wrap;html=1;fillColor=#FFF1E3;strokeColor=#D79B52;fontColor=#75430D;fontSize=13;fontStyle=1;align=center;" value="INTERNET / PUBLIC NETWORK&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Storage public access: Disabled&lt;/font&gt;" vertex="1">
+          <mxGeometry height="78" width="235" x="45" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" parent="1" style="rounded=1;arcSize=18;whiteSpace=wrap;html=1;fillColor=#F4EFF8;strokeColor=#9673A6;fontColor=#513B67;fontSize=13;fontStyle=1;align=center;" value="ADMINISTRATOR&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;RDP from approved public IP&lt;/font&gt;" vertex="1">
+          <mxGeometry height="78" width="235" x="45" y="345" as="geometry" />
+        </mxCell>
+        <mxCell id="rg" parent="1" style="swimlane;startSize=30;rounded=1;fillColor=#F2F7FC;strokeColor=#5B9BD5;fontColor=#174A75;fontSize=16;fontStyle=1;html=1;collapsible=0;" value="RESOURCE GROUP · rg-storage · East US 2" vertex="1">
+          <mxGeometry height="820" width="1225" x="330" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="vnet" parent="rg" style="swimlane;startSize=28;rounded=1;fillColor=#E7F1FB;strokeColor=#2F75B5;fontColor=#174A75;fontSize=14;fontStyle=1;html=1;collapsible=0;" value="VNET · vnet-storage · 10.0.0.0/16" vertex="1">
+          <mxGeometry height="555" width="760" x="18" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="subnet" parent="vnet" style="swimlane;startSize=26;rounded=1;fillColor=#F7FAFE;strokeColor=#91B7D9;fontColor=#315B80;fontSize=12;fontStyle=1;html=1;collapsible=0;" value="SUBNET · snet-storage · 10.0.0.0/24" vertex="1">
+          <mxGeometry height="495" width="735" x="12" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="nsg" parent="subnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Network_Security_Groups.svg;labelBackgroundColor=none;labelPerimeter=0;" value="nsg-storage&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Allow RDP 3389&lt;br&gt;from Admin IP&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="76" x="20" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="vm" parent="subnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/compute/Virtual_Machine.svg;labelBackgroundColor=none;labelPerimeter=0;" value="vm-windows&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Windows Server 2022&lt;br&gt;10.0.0.4 · Managed identity&lt;/font&gt;" vertex="1">
+          <mxGeometry height="82" width="88" x="300" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pip" parent="subnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Public_IP_Addresses.svg;labelBackgroundColor=none;labelPerimeter=0;" value="pip-windows&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Public IP · RDP&lt;/font&gt;" vertex="1">
+          <mxGeometry height="65" width="75" x="640" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="peblob" parent="subnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Private_Endpoint.svg;labelBackgroundColor=none;labelPerimeter=0;" value="Blob Private Endpoint&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;10.0.0.5 · Approved&lt;/font&gt;" vertex="1">
+          <mxGeometry height="75" width="82" x="125" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="dnsblob" parent="subnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/DNS_Zones.svg;labelBackgroundColor=none;labelPerimeter=0;" value="Blob private DNS&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;A → 10.0.0.5&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="82" x="260" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="pefiles" parent="subnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Private_Endpoint.svg;labelBackgroundColor=none;labelPerimeter=0;" value="Files Private Endpoint&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;10.0.0.6 · Approved&lt;/font&gt;" vertex="1">
+          <mxGeometry height="75" width="82" x="470" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="dnsfiles" parent="subnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/DNS_Zones.svg;labelBackgroundColor=none;labelPerimeter=0;" value="Files private DNS&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;A → 10.0.0.6&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="82" x="605" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="e_vm_peblob" edge="1" parent="subnet" source="vm" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2F75B5;strokeWidth=2;endArrow=classic;defaultLabelBackgroundColor=page;labelPlacement=auto;" target="peblob" value="HTTPS 443">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_vm_pefiles" edge="1" parent="subnet" source="vm" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#2F75B5;strokeWidth=2;endArrow=classic;defaultLabelBackgroundColor=page;labelPlacement=auto;" target="pefiles" value="SMB 445">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dns_blob" edge="1" parent="subnet" source="peblob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#9673A6;strokeWidth=1.5;endArrow=none;labelBackgroundColor=default;defaultLabelBackgroundColor=page;" target="dnsblob">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="262.5" />
+              <mxPoint x="250" y="262.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_dns_files" edge="1" parent="subnet" source="pefiles" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#9673A6;strokeWidth=1.5;endArrow=none;labelBackgroundColor=default;defaultLabelBackgroundColor=page;" target="dnsfiles">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="590" y="262" />
+              <mxPoint x="590" y="262" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_pip_to_vm" edge="1" parent="subnet" source="pip" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;defaultLabelBackgroundColor=page;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" value="">
+          <mxGeometry relative="1" x="0.2079" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="61.3" />
+              <mxPoint x="388" y="62" />
+            </Array>
+            <mxPoint x="390" y="62" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="storage" parent="rg" style="swimlane;startSize=48;rounded=1;fillColor=#F4EFF8;strokeColor=#9673A6;fontColor=#513B67;fontSize=14;fontStyle=1;html=1;collapsible=0;" value="STORAGE ACCOUNT · storagehm2k&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;StorageV2 · Standard_LRS · Hot · Public network access: Disabled&lt;/font&gt;" vertex="1">
+          <mxGeometry height="555" width="395" x="805" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="blob" parent="storage" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/general/Storage_Container.svg;labelBackgroundColor=none;labelPerimeter=0;" value="Blob service&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;labcontainer&lt;br&gt;Versioning + soft delete · 7d&lt;br&gt;Container recovery · 7d&lt;/font&gt;" vertex="1">
+          <mxGeometry height="82" width="85" x="45" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="files" parent="storage" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/general/Storage_Azure_Files.svg;labelBackgroundColor=none;labelPerimeter=0;" value="Azure Files&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;labshare · SMB 445&lt;br&gt;Share soft delete · 7d&lt;br&gt;Storage key auth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="82" width="85" x="265" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac" parent="storage" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#F2F8F0;strokeColor=#8DBB87;fontColor=#205B35;fontSize=12;fontStyle=1;align=center;" value="BLOB RBAC · CONTAINER SCOPE" vertex="1">
+          <mxGeometry height="235" width="355" x="18" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="entra_user" parent="rbac" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/identity/Users.svg;labelBackgroundColor=none;labelPerimeter=0;" value="Hamza Mahmood&lt;div&gt;&lt;font style=&quot;font-size:10px&quot;&gt;User principal&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="55.9" width="51.6" x="45" y="10.930232558139533" as="geometry" />
+        </mxCell>
+        <mxCell id="managed_identity" parent="rbac" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/mscae/Managed_Identities.svg;labelBackgroundColor=none;labelPerimeter=0;" value="vm-windows&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;System-assigned identity&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55.9" width="51.6" x="235" y="10.930232558139533" as="geometry" />
+        </mxCell>
+        <mxCell id="rbac_role" parent="rbac" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5B9B59;fontColor=#205B35;fontSize=12;fontStyle=1;align=center;" value="Storage Blob Data Contributor&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Assigned to both principals · Scope: labcontainer&lt;/font&gt;" vertex="1">
+          <mxGeometry height="61.1" width="319" x="18" y="155.10000000000005" as="geometry" />
+        </mxCell>
+        <mxCell id="protection" parent="storage" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#F4F0FA;strokeColor=#9673A6;fontColor=#513B67;fontSize=11;fontStyle=1;align=center;" value="DATA PROTECTION&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Blob version restore · Blob / container / share soft delete · 7-day retention&lt;/font&gt;" vertex="1">
+          <mxGeometry height="75" width="355" x="18" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="dnslinks" parent="rg" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/DNS_Zones.svg;labelBackgroundColor=none;labelPerimeter=0;" value="PRIVATE DNS VNET LINKS&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;Blob + Files zones linked to vnet-storage&lt;/font&gt;" vertex="1">
+          <mxGeometry height="82" width="90" x="60" y="651" as="geometry" />
+        </mxCell>
+        <mxCell id="accessmodel" parent="rg" style="rounded=1;arcSize=12;whiteSpace=wrap;html=1;fillColor=#F7F8FA;strokeColor=#98A2B3;fontColor=#344054;fontSize=12;fontStyle=1;align=center;" value="ACCESS MODEL&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Administrator → RDP → vm-windows&lt;br&gt;VM → Blob Private Endpoint (HTTPS 443) / Files Private Endpoint&lt;/font&gt;&lt;span style=&quot;font-size: 11px; background-color: transparent; color: light-dark(rgb(52, 64, 84), rgb(174, 184, 201));&quot;&gt;&amp;nbsp;(SMB 445)&lt;/span&gt;&lt;div&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Public Storage endpoint blocked · HTTP 403&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="88" width="490" x="245" y="645" as="geometry" />
+        </mxCell>
+        <mxCell id="e_admin_to_pip" edge="1" parent="1" source="admin" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;defaultLabelBackgroundColor=page;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.973;entryY=0.507;entryDx=0;entryDy=0;entryPerimeter=0;" target="pip" value="RDP">
+          <mxGeometry relative="1" x="-0.9276" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="162.5" y="660" />
+              <mxPoint x="1090" y="660" />
+              <mxPoint x="1090" y="266" />
+            </Array>
+            <mxPoint x="1090" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2VTGP8D4RC28I_nE-OGM-1" parent="1" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.user;labelPerimeter=1;" value="" vertex="1">
+          <mxGeometry height="70" width="75" x="125" y="270" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
