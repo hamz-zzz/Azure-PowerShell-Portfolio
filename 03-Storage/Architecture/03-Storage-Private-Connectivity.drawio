@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Page-1" id="page-1">
-    <mxGraphModel dx="1493" dy="919" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0" adaptiveColors="auto">
+    <mxGraphModel dx="1590" dy="951" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0" adaptiveColors="auto">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -114,9 +114,6 @@
             </Array>
             <mxPoint x="1090" y="260" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="2VTGP8D4RC28I_nE-OGM-1" parent="1" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.user;labelPerimeter=1;" value="" vertex="1">
-          <mxGeometry height="70" width="75" x="125" y="270" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
