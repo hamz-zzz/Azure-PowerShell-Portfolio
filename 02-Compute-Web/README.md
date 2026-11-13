@@ -1,6 +1,6 @@
 # Project 02  -  Azure Compute, Load Balancing & Web Infrastructure
 
-![Azure Compute, Load Balancing & Web Infrastructure](Architecture/02-Azure-Compute-Load-Balancing-Web-Infrastructure.svg)
+![Azure Compute, Load Balancing & Web Infrastructure](Architecture/02-Azure-Compute-Load-Balancing-Web-Infrastructure.png)
 
 ## Overview
 
