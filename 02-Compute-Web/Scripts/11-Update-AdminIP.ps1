@@ -3,7 +3,7 @@ $ResourceGroupName = 'rg-compute-web'
 $NSGName = 'nsg-web'
 
 # Administrative access configuration
-$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
+$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org)
 $AdminCIDR = "$AdminPublicIP/32"
 
 # Retrieve network security group

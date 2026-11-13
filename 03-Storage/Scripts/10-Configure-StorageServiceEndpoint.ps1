@@ -3,7 +3,7 @@ $ResourceGroupName = 'rg-storage'
 $VirtualNetworkName = 'vnet-storage'
 $SubnetName = 'snet-storage'
 $StorageAccountName = 'storagehm2k'
-$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
+$AdminPublicIP = Invoke-RestMethod https://api.ipify.org
 
 # Retrieve virtual network
 $VirtualNetwork = Get-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroupName

@@ -4,7 +4,7 @@ $LoadBalancerName = 'lb-web'
 $NSGName = 'nsg-web'
 
 # Administrative access configuration
-$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
+$AdminPublicIP = Invoke-RestMethod https://api.ipify.org
 $AdminAddressPrefix = "$AdminPublicIP/32"
 
 # Inbound NAT rule configurations

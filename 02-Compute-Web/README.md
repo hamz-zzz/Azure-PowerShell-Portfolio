@@ -53,7 +53,7 @@ The NSG rules use the backend ports. The Load Balancer NAT rules translate the f
 The script retrieves my public IPv4 at runtime and uses it as the source for the administrative NSG rules:
 
 ```powershell
-$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
+$AdminPublicIP = Invoke-RestMethod https://api.ipify.org
 $AdminAddressPrefix = "$AdminPublicIP/32"
 
 Add-AzNetworkSecurityRuleConfig -NetworkSecurityGroup $NSG -Name 'Allow-RDP-Admin' -Protocol Tcp -Direction Inbound -Priority 110 -SourceAddressPrefix $AdminAddressPrefix -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389 -Access Allow

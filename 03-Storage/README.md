@@ -37,7 +37,7 @@ New-AzVirtualNetwork -Name $VirtualNetworkName -ResourceGroupName $ResourceGroup
 `nsg-storage` is associated with `snet-storage`. RDP is allowed only from my public IPv4 address. The script retrieves it at runtime and uses a `/32` source range:
 
 ```powershell
-$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
+$AdminPublicIP = Invoke-RestMethod https://api.ipify.org
 
 $Rule = New-AzNetworkSecurityRuleConfig -Name 'Allow-RDP' -Priority 100 -Protocol Tcp -SourceAddressPrefix "$AdminPublicIP/32" -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389 -Access Allow -Direction Inbound
 $NSG = New-AzNetworkSecurityGroup -Name $NSGName -ResourceGroupName $ResourceGroupName -Location $Location -SecurityRules $Rule

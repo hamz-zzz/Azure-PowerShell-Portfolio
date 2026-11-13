@@ -5,7 +5,7 @@ $Location = 'eastus2'
 # Network configuration
 $VirtualNetworkName = 'vnet-storage'
 $SubnetName = 'snet-storage'
-$AdminPublicIP = (Invoke-RestMethod https://api.ipify.org).Trim()
+$AdminPublicIP = Invoke-RestMethod https://api.ipify.org
 
 # Network security group configuration
 $NSGName = 'nsg-storage'
