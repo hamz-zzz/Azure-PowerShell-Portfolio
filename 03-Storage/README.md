@@ -344,14 +344,67 @@ The policies are tested by restoring previous Blob versions and recovering delet
 
 ### Recovery tests
 
-Recovery tests cover Blob versions, deleted Blobs, containers, and Azure Files shares.
+The data protection configuration was tested by recovering Blob data and deleted storage resources. The tests cover both Blob versioning and soft delete for Blobs, containers, and Azure Files shares.
 
-| Recovery operation | Recovery evidence |
-|---|---|
-| **Restore a previous Blob version** | ![Blob version history](Screenshots/29-Blob-Version-History.png) ![Blob version restoration operation](Screenshots/30-Blob-Version-Restoration.png) ![Blob version restoration validation](Screenshots/31-Blob-Restoration-Validation.png) |
-| **Recover a soft-deleted Blob** | ![Deleted Blob](Screenshots/32-Blob-Soft-Delete.png) ![Blob soft-delete recovery operation](Screenshots/33-Blob-Soft-Delete-Restoration.png) ![Blob recovery validation](Screenshots/34-Blob-Soft-Delete-Validation.png) |
-| **Restore a deleted container** | ![Deleted container](Screenshots/35-Container-Soft-Deleted.png) ![Container restoration](Screenshots/36-Container-Restoration.png) |
-| **Restore a deleted Azure Files share** | ![Deleted Azure Files share](Screenshots/37-Azure-Files-Share-Soft-Deleted.png) ![Azure Files share restoration](Screenshots/38-Azure-Files-Share-Restoration.png) |
+#### Blob version recovery
+
+Blob versioning was tested by uploading a file and then overwriting it with updated content. The initial upload contained `Version 1 - Original content`.
+
+![Initial Blob upload](Screenshots/29.1-Blob-Initial-Upload.png)
+
+The local file was updated to `Version 2 - Updated content` and uploaded again using AzCopy. This created a new version of the existing Blob while retaining its previous version.
+
+![Blob overwrite using AzCopy](Screenshots/29.2-Blob-Overwrite.png)
+
+The version history of `version-test.txt` was inspected to identify the earlier version. That version was copied to a separate Blob named `version-restored.txt` using AzCopy.
+
+![Blob version history](Screenshots/29.3-Blob-Version-History.png)
+
+The version restoration operation was performed using Azure Portal. The recovered file was then downloaded and its contents checked to verify that the earlier version had been recovered.
+
+![Blob version restoration operation](Screenshots/30-Blob-Version-Restoration.png)
+
+![Recovered Blob content validation](Screenshots/31-Blob-Restoration-Validation.png)
+
+#### Blob soft-delete recovery
+
+Blob soft delete was tested by deleting `version-test.txt` after completing the versioning test. The deletion was performed using AzCopy.
+
+![Blob deletion using AzCopy](Screenshots/32.1-Blob-Deletion.png)
+
+The Storage Account showed `version-test.txt` with a `Deleted` status. Its previous versions remained available through the deleted versions view.
+
+![Soft-deleted Blob and its versions](Screenshots/32.2-Blob-Soft-Delete.png)
+
+The undelete operation successfully recovered the Blob and its previous versions.
+
+![Blob undelete operation](Screenshots/33-Blob-Soft-Delete-Restoration.png)
+
+AzCopy was then used to download the recovered Blob. The downloaded file was inspected to confirm that its original content was accessible.
+
+![Recovered Blob content validation](Screenshots/34-Blob-Soft-Delete-Validation.png)
+
+#### Container recovery
+
+The `labcontainer` container was deleted to test container soft delete. It appeared in the Storage Account with a `Deleted` status.
+
+![Soft-deleted container](Screenshots/35-Container-Soft-Deleted.png)
+
+The container recovery operation was performed through the Azure Portal to restore `labcontainer`.
+
+![Container restoration operation](Screenshots/36-Container-Restoration.png)
+
+After restoration, `labcontainer` appeared with an `Active` status in the Storage Account.
+
+#### Azure Files share recovery
+
+The `labshare` Azure Files share was deleted to test share soft delete. It appeared in the Storage Account's deleted shares list.
+
+![Soft-deleted Azure Files share](Screenshots/37-Azure-Files-Share-Soft-Deleted.png)
+
+The share recovery operation was performed through the Azure Portal to restore `labshare`.
+
+![Azure Files share restoration operation](Screenshots/38-Azure-Files-Share-Restoration.png)
 
 ## Project files
 
