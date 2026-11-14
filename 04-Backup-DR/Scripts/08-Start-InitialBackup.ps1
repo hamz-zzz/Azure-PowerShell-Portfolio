@@ -1,3 +1,4 @@
+
 # Resource configuration
 $ResourceGroupName = 'rg-recovery-primary'
 $VaultName = 'rsv-backup-primary'
@@ -19,30 +20,49 @@ $RecoveryPoints = Get-AzRecoveryServicesBackupRecoveryPoint -Item $BackupItem -V
 # Start On-Demand Backup
 $Job = $null
 if ($Jobs) {
-    Write-Host 'Backup already running. Monitoring existing job.'
+    Write-Host 'Backup already running. Monitoring existing job.' -ForegroundColor Yellow
     $Job = $Jobs | Select-Object -First 1
 }
 elseif ($RecoveryPoints) {
-    Write-Host 'Recovery point already exists. Skipping backup.'
+    Write-Host 'Recovery point already exists. Skipping backup.' -ForegroundColor Yellow
 }
 else {
-    Write-Host 'No backup job or recovery point found. Starting backup.'
+    Write-Host 'No backup job or recovery point found. Starting backup.' -ForegroundColor Yellow
     $Job = Backup-AzRecoveryServicesBackupItem -Item $BackupItem -ExpiryDateTimeUTC (Get-Date).ToUniversalTime().AddDays(30)
 }
 
 # Monitor Backup Job
 if ($Job) {
     while ($Job.Status -eq 'InProgress') {
-        Write-Host 'Backup is running...'
-        Start-Sleep -Seconds 30
+        Write-Host 'Backup is running. Checking again in 60 seconds...' -ForegroundColor Yellow
+
+        # Retrieve Backup Job Details
+        $JobDetails = Get-AzRecoveryServicesBackupJobDetail -JobId $Job.JobId -VaultId $Vault.Id
+
+        # Display Subtask Status
+        $JobDetails.SubTasks | Format-Table Name, Status, Duration
+
+        Start-Sleep -Seconds 60
+
+        # Refresh Backup Job Status
         $Job = Get-AzRecoveryServicesBackupJob -Job $Job -VaultId $Vault.Id
     }
+
+    # Retrieve Final Job Details
+    $JobDetails = Get-AzRecoveryServicesBackupJobDetail -JobId $Job.JobId -VaultId $Vault.Id
+    $JobDetails.SubTasks | Format-Table Name, Status, Duration
+
+    # Display Final Backup Status
+    if ($Job.Status -eq 'Completed') {
+        Write-Host 'Backup completed successfully.' -ForegroundColor Green
+    }
+    else {
+        Write-Host "Backup finished with status: $($Job.Status)" -ForegroundColor Red
+    }
+
     $Job | Format-List WorkloadName, Operation, Status, StartTime, EndTime
 }
 
 # Verify Initial Backup
-if ($Job) {
-    $Job | Format-Table WorkloadName, Status, StartTime, EndTime
-}
 $RecoveryPoints = Get-AzRecoveryServicesBackupRecoveryPoint -Item $BackupItem -VaultId $Vault.Id
 $RecoveryPoints | Select-Object -First 1 RecoveryPointTime, RecoveryPointType | Format-Table

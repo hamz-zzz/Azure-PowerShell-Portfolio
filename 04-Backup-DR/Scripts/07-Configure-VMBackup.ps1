@@ -32,9 +32,9 @@ Enable-AzRecoveryServicesBackupProtection -Policy $Policy -Name $VMName -Resourc
 # Verify Backup Policy
 $Policy = Get-AzRecoveryServicesBackupProtectionPolicy -Name $PolicyName
 $Policy | Format-List Name, WorkloadType, BackupManagementType, PolicySubType
-$Policy.SchedulePolicy
+$Policy.SchedulePolicy | Format-Table ScheduleRunFrequency, ScheduleRunTimes, ScheduleRunTimeZone
 $Policy.RetentionPolicy.DailySchedule
 
 # Verify VM Backup Protection
-$BackupItem = Get-AzRecoveryServicesBackupItem -BackupManagementType AzureVM -WorkloadType AzureVM
+$BackupItem = Get-AzRecoveryServicesBackupItem -BackupManagementType AzureVM -WorkloadType AzureVM -FriendlyName $VMName
 $BackupItem | Format-List VirtualMachineId, ProtectionStatus, ProtectionState, ProtectionPolicyName, LastBackupStatus, LatestRecoveryPoint
