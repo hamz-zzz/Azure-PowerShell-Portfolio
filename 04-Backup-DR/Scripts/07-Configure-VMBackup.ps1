@@ -11,14 +11,14 @@ $Vault = Get-AzRecoveryServicesVault -Name $VaultName -ResourceGroupName $Resour
 Set-AzRecoveryServicesVaultContext -Vault $Vault
 
 # Retrieve Default VM Backup Schedule and Retention Policy Objects
-$SchedulePolicy = Get-AzRecoveryServicesBackupSchedulePolicyObject -WorkloadType AzureVM
+$SchedulePolicy = Get-AzRecoveryServicesBackupSchedulePolicyObject -WorkloadType AzureVM -PolicySubType Standard
 $RetentionPolicy = Get-AzRecoveryServicesBackupRetentionPolicyObject -WorkloadType AzureVM
 
 # Configure Backup Schedule
 $SchedulePolicy.ScheduleRunFrequency = 'Daily'
-$SchedulePolicy.DailySchedule.ScheduleRunTimes.Clear()
+$SchedulePolicy.ScheduleRunTimes.Clear()
 $BackupTime = (Get-Date -Hour 23 -Minute 0 -Second 0 -Millisecond 0).ToUniversalTime()
-$SchedulePolicy.DailySchedule.ScheduleRunTimes.Add($BackupTime)
+$SchedulePolicy.ScheduleRunTimes.Add($BackupTime)
 
 # Configure Retention Policy
 $RetentionPolicy.DailySchedule.DurationCountInDays = 30
@@ -31,8 +31,8 @@ Enable-AzRecoveryServicesBackupProtection -Policy $Policy -Name $VMName -Resourc
 
 # Verify Backup Policy
 $Policy = Get-AzRecoveryServicesBackupProtectionPolicy -Name $PolicyName
-$Policy | Format-List Name, WorkloadType, BackupManagementType
-$Policy.SchedulePolicy.DailySchedule
+$Policy | Format-List Name, WorkloadType, BackupManagementType, PolicySubType
+$Policy.SchedulePolicy
 $Policy.RetentionPolicy.DailySchedule
 
 # Verify VM Backup Protection
