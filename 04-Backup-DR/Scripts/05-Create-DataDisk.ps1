@@ -15,6 +15,6 @@ Update-AzVM -VM $VM -ResourceGroupName $ResourceGroupName
 
 # Verify Deployment
 $Disk = Get-AzDisk -DiskName $DiskName -ResourceGroupName $ResourceGroupName
-$Disk | Format-Table Name, Location, DiskSizeGB, Sku, ProvisioningState
+$Disk | Select-Object Name, DiskSizeGB, @{Name = 'SKU'; Expression = {$_.Sku.Name}}, Location, ProvisioningState | Format-Table
 $VM = Get-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
-$VM.StorageProfile.DataDisks | Format-Table Name, Lun, DiskSizeGB, CreateOption, ManagedDisk
+$VM.StorageProfile.DataDisks | Select-Object Name, DiskSizeGB, @{Name = 'SKU'; Expression = {$_.ManagedDisk.StorageAccountType}}, Lun, CreateOption | Format-Table
