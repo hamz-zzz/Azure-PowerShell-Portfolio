@@ -1,45 +1,40 @@
-
 # Resource configuration
 $ResourceGroupName = 'rg-recovery-primary'
-$Location = 'eastus2'
 $VaultName = 'rsv-backup-primary'
 $VMName = 'vm-primary'
 $PolicyName = 'policy-vm-daily'
 
-
 # Retrieve Recovery Services Vault
-# Hint: Get-AzRecoveryServicesVault
-
+$Vault = Get-AzRecoveryServicesVault -Name $VaultName -ResourceGroupName $ResourceGroupName
 
 # Set Recovery Services Vault Context
-# Hint: Set-AzRecoveryServicesVaultContext
-
+Set-AzRecoveryServicesVaultContext -Vault $Vault
 
 # Retrieve Default VM Backup Schedule and Retention Policy Objects
-# Hint: Get-AzRecoveryServicesBackupSchedulePolicyObject
-# Hint: Get-AzRecoveryServicesBackupRetentionPolicyObject
-
+$SchedulePolicy = Get-AzRecoveryServicesBackupSchedulePolicyObject -WorkloadType AzureVM
+$RetentionPolicy = Get-AzRecoveryServicesBackupRetentionPolicyObject -WorkloadType AzureVM
 
 # Configure Backup Schedule
-# Daily backup frequency
-# Set the backup time
-
+$SchedulePolicy.ScheduleRunFrequency = 'Daily'
+$SchedulePolicy.DailySchedule.ScheduleRunTimes.Clear()
+$BackupTime = (Get-Date -Hour 23 -Minute 0 -Second 0 -Millisecond 0).ToUniversalTime()
+$SchedulePolicy.DailySchedule.ScheduleRunTimes.Add($BackupTime)
 
 # Configure Retention Policy
-# Retain daily recovery points for 30 days
-
+$RetentionPolicy.DailySchedule.DurationCountInDays = 30
 
 # Create Backup Policy
-# Hint: New-AzRecoveryServicesBackupProtectionPolicy
-
+$Policy = New-AzRecoveryServicesBackupProtectionPolicy -Name $PolicyName -WorkloadType AzureVM -SchedulePolicy $SchedulePolicy -RetentionPolicy $RetentionPolicy
 
 # Enable VM Backup Protection
-# Hint: Enable-AzRecoveryServicesBackupProtection
-
+Enable-AzRecoveryServicesBackupProtection -Policy $Policy -Name $VMName -ResourceGroupName $ResourceGroupName
 
 # Verify Backup Policy
-# Hint: Get-AzRecoveryServicesBackupProtectionPolicy
-
+$Policy = Get-AzRecoveryServicesBackupProtectionPolicy -Name $PolicyName
+$Policy | Format-List Name, WorkloadType, BackupManagementType
+$Policy.SchedulePolicy.DailySchedule
+$Policy.RetentionPolicy.DailySchedule
 
 # Verify VM Backup Protection
-# Hint: Get-AzRecoveryServicesBackupItem
+$BackupItem = Get-AzRecoveryServicesBackupItem -BackupManagementType AzureVM -WorkloadType AzureVM
+$BackupItem | Format-List VirtualMachineId, ProtectionStatus, ProtectionState, ProtectionPolicyName, LastBackupStatus, LatestRecoveryPoint

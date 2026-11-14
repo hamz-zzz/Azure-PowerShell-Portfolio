@@ -11,7 +11,5 @@ Set-AzRecoveryServicesBackupProperty -Vault $Vault -BackupStorageRedundancy Loca
 
 # Verify Deployment
 $Vault = Get-AzRecoveryServicesVault -Name $VaultName -ResourceGroupName $ResourceGroupName
+$Vault | Format-Table Name, ResourceGroupName, Location
 $Vault.Properties.RedundancySettings
-
-# Verify Backup Storage Redundancy
-Get-AzRecoveryServicesBackupProperty -Vault $Vault
