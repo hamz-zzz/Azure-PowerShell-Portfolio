@@ -34,7 +34,7 @@ else {
 # Monitor Backup Job
 if ($Job) {
     while ($Job.Status -eq 'InProgress') {
-        Write-Host 'Backup is running. Checking again in 60 seconds...' -ForegroundColor Yellow
+        Write-Host 'Backup is running. Checking again in 30 seconds...' -ForegroundColor Yellow
 
         # Retrieve Backup Job Details
         $JobDetails = Get-AzRecoveryServicesBackupJobDetail -JobId $Job.JobId -VaultId $Vault.Id
@@ -42,7 +42,7 @@ if ($Job) {
         # Display Subtask Status
         $JobDetails.SubTasks | Format-Table Name, Status, Duration
 
-        Start-Sleep -Seconds 60
+        Start-Sleep -Seconds 30
 
         # Refresh Backup Job Status
         $Job = Get-AzRecoveryServicesBackupJob -Job $Job -VaultId $Vault.Id
@@ -65,4 +65,4 @@ if ($Job) {
 
 # Verify Initial Backup
 $RecoveryPoints = Get-AzRecoveryServicesBackupRecoveryPoint -Item $BackupItem -VaultId $Vault.Id
-$RecoveryPoints | Select-Object -First 1 RecoveryPointTime, RecoveryPointType | Format-Table
+$RecoveryPoints | Select-Object -First 1 RecoveryPointTime, RecoveryPointType
