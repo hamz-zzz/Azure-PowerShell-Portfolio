@@ -65,4 +65,4 @@ if ($Job) {
 
 # Verify Initial Backup
 $RecoveryPoints = Get-AzRecoveryServicesBackupRecoveryPoint -Item $BackupItem -VaultId $Vault.Id
-$RecoveryPoints | Select-Object -First 1 RecoveryPointTime, RecoveryPointType
+$RecoveryPoints | Sort-Object RecoveryPointTime -Descending | Select-Object -First 1 RecoveryPointTime, RecoveryPointType
