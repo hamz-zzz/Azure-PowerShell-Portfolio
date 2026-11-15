@@ -53,4 +53,5 @@ while ($Job.State -in @('NotStarted', 'InProgress')) {
 $Job | Format-Table TargetObjectName, JobType, State
 
 # Verify Replication
-Get-AzRecoveryServicesAsrReplicationProtectedItem -ProtectionContainer $PrimaryContainer
+$ReplicationItem = Get-AzRecoveryServicesAsrReplicationProtectedItem -ProtectionContainer $PrimaryContainer
+$ReplicationItem | Format-List Name, ProtectionState, ProtectionStateDescription, ReplicationHealth, ReplicationHealthErrors, RecoveryFabricFriendlyName, RecoveryProtectionContainerFriendlyName
