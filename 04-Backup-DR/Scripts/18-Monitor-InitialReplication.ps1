@@ -22,16 +22,17 @@ $PrimaryContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $Primar
 # Monitor Initial Replication Progress
 do {
     $ReplicationItem = Get-AzRecoveryServicesAsrReplicationProtectedItem -ProtectionContainer $PrimaryContainer
-    
-    Write-Host "Initial Replication: $($ReplicationItem.ProviderSpecificDetails.MonitoringPercentageCompletion)% complete" -ForegroundColor Yellow
-
-    if ($ReplicationItem.ProviderSpecificDetails.MonitoringPercentageCompletion -lt 100) {
+    Write-Host "Protection State: $($ReplicationItem.ProtectionStateDescription)"
+    if (
+        $ReplicationItem.ProtectionState -ne 'Protected'
+    ) {
         Start-Sleep -Seconds 30
     }
+} while (
+    $ReplicationItem.ProtectionState -ne 'Protected'
+)
 
-} while ($ReplicationItem.ProviderSpecificDetails.MonitoringPercentageCompletion -lt 100)
-
-Write-Host 'Initial replication completed.' -ForegroundColor Green
+Write-Host 'Initial replication completed and protection is established.' -ForegroundColor Green
 
 # Verify Replication
-$ReplicationItem | Format-List Name, ProtectionState, ProtectionStateDescription, ReplicationHealth
+$ReplicationItem | Format-List Name, ProtectionState, ReplicationHealth
