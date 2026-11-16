@@ -30,7 +30,7 @@ $Subnet = $VirtualNetwork.Subnets | Where-Object Name -eq $SubnetName
 $Credential = Get-Credential -Message 'Enter the local administrator credentials for the Azure VM'
 
 # Create public IP address
-$PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static -Sku Standard
+$PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
 
 # Create network interface
 $NetworkInterface = New-AzNetworkInterface -Name $NetworkInterfaceName -ResourceGroupName $ResourceGroupName -Location $Location -PrivateIpAddress '10.0.0.4' -Subnet $Subnet -PublicIpAddress $PublicIP
@@ -55,7 +55,6 @@ Add-AzVMNetworkInterface -VM $VMConfig -Id $NetworkInterface.Id
 
 # Deploy virtual machine
 New-AzVM -VM $VMConfig -ResourceGroupName $ResourceGroupName -Location $Location
-
 
 # Verify Deployment
 $VirtualMachine = Get-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
