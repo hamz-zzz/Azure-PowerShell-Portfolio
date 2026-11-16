@@ -30,5 +30,5 @@ $MountScript = Get-AzRecoveryServicesBackupRPMountScript -RecoveryPoint $LatestR
 $MountScript.Password | Set-Content -Path $PasswordFile
 
 # Verify Recovery Point and Mount Script    
-$LatestRecoveryPoint | Format-List RecoveryPointTime, RecoveryPointType
+$LatestRecoveryPoint | Format-List Name, RecoveryPointTime, RecoveryPointType
 Get-ChildItem -Path $DownloadPath

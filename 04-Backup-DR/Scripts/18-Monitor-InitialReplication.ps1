@@ -36,3 +36,10 @@ Write-Host 'Initial replication completed and protection is established.' -Foreg
 
 # Verify Replication
 $ReplicationItem | Format-List Name, ProtectionState, ReplicationHealth
+
+# Retrieve Recovery Points
+$RecoveryPoints = Get-AzRecoveryServicesAsrRecoveryPoint -ReplicationProtectedItem $ReplicationItem
+$LatestRecoveryPoint = $RecoveryPoints | Sort-Object RecoveryPointTime -Descending | Select-Object -First 1
+
+# Display Recovery Points
+$LatestRecoveryPoint | Format-List Name, RecoveryPointType, RecoveryPointTime
