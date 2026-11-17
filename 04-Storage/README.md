@@ -1,6 +1,6 @@
 # Project 04 - Azure Storage & Private Connectivity
 
-![Azure Storage & Private Connectivity](Architecture/03-Storage-Private-Connectivity.png)
+![Azure Storage & Private Connectivity](Architecture/04-Storage-Private-Connectivity.png)
 
 ## Overview
 
