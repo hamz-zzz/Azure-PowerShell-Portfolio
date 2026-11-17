@@ -5,10 +5,10 @@ $PublicIPName = 'pip-secondary'
 $Location = 'Central US'
 
 # Retrieve Recovered VM
-$RecoveredVM = Get-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
+$RecoveryVM = Get-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
 
 # Retrieve Network Interface
-$NICId = $RecoveredVM.NetworkProfile.NetworkInterfaces[0].Id
+$NICId = $RecoveryVM.NetworkProfile.NetworkInterfaces[0].Id
 $NIC = Get-AzNetworkInterface -ResourceId $NICId
 
 # Create Public IP
@@ -17,6 +17,10 @@ $PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $Resour
 # Associate Public IP with Network Interface
 $NIC.IpConfigurations[0].PublicIpAddress =  $PublicIP
 Set-AzNetworkInterface -NetworkInterface $NIC
+
+# Update IIS Webpage
+$Script = "& 'C:\Guest-Configs\03-Generate-IISWebpage.ps1'"
+Invoke-AzVMRunCommand -ResourceGroupName $ResourceGroupName -VMName $VMName -CommandId 'RunPowerShellScript' -ScriptString $Script
 
 # Verify Recovery VM Access Configuration
 $NIC = Get-AzNetworkInterface -ResourceId $NICId

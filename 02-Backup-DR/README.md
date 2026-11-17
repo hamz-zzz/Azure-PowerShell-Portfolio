@@ -1,4 +1,4 @@
-# Project 04 - Azure Backup & Cross-Region Disaster Recovery
+# Project 02 - Azure Backup & Cross-Region Disaster Recovery
 
 **Status:** Planned
 

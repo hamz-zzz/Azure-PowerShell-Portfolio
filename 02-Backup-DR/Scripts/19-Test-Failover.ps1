@@ -43,10 +43,10 @@ $Job | Format-Table TargetObjectName, JobType, State
 
 # Stop execution if the test failover job fails
 if ($Job.State -ne 'Succeeded') {
-    Write-Warning "Test Failover did not succeed. Final state: $($Job.State)"
+    Write-Warning "Test Failover failed. Final state: $($Job.State)"
     return
 }
 
 # Verify Test Failover
-$RecoveredVM = Get-AzVM -ResourceGroupName $ResourceGroupName -Status
-$RecoveredVM | Select-Object Name, Location, PowerState
+$RecoveryVM = Get-AzVM -ResourceGroupName $ResourceGroupName -Status
+$RecoveryVM | Select-Object Name, Location, PowerState
