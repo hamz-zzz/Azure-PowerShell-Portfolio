@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Page-1" id="page-1">
-    <mxGraphModel dx="1854" dy="932" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1040" math="0" shadow="0" adaptiveColors="auto">
+    <mxGraphModel dx="1828" dy="919" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1040" math="0" shadow="0" adaptiveColors="auto">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -98,8 +98,8 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="asrcache" edge="1" parent="rgprimary" source="vm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#2F75B5;strokeWidth=2;fontSize=11;fontColor=light-dark(#FFFFFF,#FFFFFF);labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;" target="cache" value="Changed disk data">
-          <mxGeometry relative="1" x="0.226" y="6" as="geometry">
+        <mxCell id="asrcache" edge="1" parent="rgprimary" source="vm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#2F75B5;strokeWidth=2;fontSize=11;fontColor=default;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;" target="cache" value="Changed disk data">
+          <mxGeometry relative="1" x="0.2091" y="50" as="geometry">
             <mxPoint as="offset" />
             <Array as="points">
               <mxPoint x="471" y="160" />
@@ -200,7 +200,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="httpPrimary" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2878B5;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=0;exitY=0.25;entryX=0.35;entryY=0;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="pip" value="HTTP · TCP 80 · Internet">
+        <mxCell id="httpPrimary" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2878B5;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=default;exitX=0;exitY=0.25;entryX=0.35;entryY=0;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="pip" value="HTTP · TCP 80 · Internet">
           <mxGeometry relative="1" x="-0.0692" y="-1" as="geometry">
             <mxPoint y="1" as="offset" />
             <Array as="points">
@@ -208,7 +208,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="httpRecovery" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2878B5;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=0.615;exitY=1.001;entryX=0.35;entryY=0;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;exitPerimeter=0;" target="testpip" value="HTTP · TCP 80&lt;br&gt;Internet">
+        <mxCell id="httpRecovery" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2878B5;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=default;exitX=0.615;exitY=1.001;entryX=0.35;entryY=0;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;exitPerimeter=0;" target="testpip" value="HTTP · TCP 80&lt;br&gt;Internet">
           <mxGeometry relative="1" x="0.4504" as="geometry">
             <mxPoint as="offset" />
             <Array as="points">
@@ -217,14 +217,14 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="rdpPrimary" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=0;exitY=0.75;entryX=0.75;entryY=0;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="pip" value="RDP · TCP 3389Admin public IPv4">
+        <mxCell id="rdpPrimary" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=default;exitX=0;exitY=0.75;entryX=0.75;entryY=0;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="pip" value="RDP · TCP 3389 · Admin public IPv4">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="176" y="161.5" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="rdpRecovery" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=1;exitY=0.75;entryX=0.75;entryY=0;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="testpip" value="RDP · TCP 3389&lt;br&gt;Admin public IPv4">
+        <mxCell id="rdpRecovery" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=default;exitX=1;exitY=0.75;entryX=0.75;entryY=0;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="testpip" value="RDP · TCP 3389&lt;br&gt;Admin public IPv4">
           <mxGeometry relative="1" x="0.4325" as="geometry">
             <mxPoint x="-1" as="offset" />
             <Array as="points">
