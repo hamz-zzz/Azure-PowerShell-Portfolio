@@ -1,7 +1,7 @@
 # Resource configuration
 $ResourceGroupName = 'rg-recovery-secondary'
 $VMName = 'vm-primary-test'
-$PublicIPName = 'pip-secondary'
+$PublicIPName = 'pip-primary-test'
 $Location = 'Central US'
 
 # Retrieve Recovered VM
