@@ -1,0 +1,240 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="page-1">
+    <mxGraphModel dx="1854" dy="932" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="1040" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=23;fontStyle=1;fontColor=#12304A;strokeColor=none;fillColor=none;" value="Project 2 — Azure Backup &amp;amp; Disaster Recovery" vertex="1">
+          <mxGeometry height="36" width="1000" x="35" y="18" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontColor=#526579;strokeColor=none;fillColor=none;" value="East US 2 primary workload  ·  Central US recovery target  ·  Azure VM Backup + Azure Site Recovery" vertex="1">
+          <mxGeometry height="25" width="1200" x="35" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="access" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8F3E9;strokeColor=#B89A65;fontColor=#4F4352;fontSize=14;fontStyle=1;align=center;strokeWidth=2;" value="EXTERNAL ACCESS&lt;br&gt;Internet · Public web clients · HTTP · TCP 80&lt;br&gt;Administrator · Public IPv4 · RDP · TCP 3389" vertex="1">
+          <mxGeometry height="82" width="520" x="620" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="primary" parent="1" style="swimlane;startSize=34;rounded=1;fillColor=#F2F7FC;strokeColor=#5B9BD5;fontColor=#174A75;fontSize=16;fontStyle=1;html=1;collapsible=0;" value="PRIMARY REGION  ·  EAST US 2" vertex="1">
+          <mxGeometry height="690" width="820" x="35" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="rgprimary" parent="primary" style="swimlane;startSize=28;rounded=1;fillColor=#F7FAFE;strokeColor=#7EA6D8;fontColor=#174A75;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="rg-recovery-primary" vertex="1">
+          <mxGeometry height="635" width="792" x="14" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="sourcevnet" parent="rgprimary" style="swimlane;startSize=27;rounded=1;fillColor=#E7F1FB;strokeColor=#2F75B5;fontColor=#174A75;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="vnet-primary  ·  10.0.0.0/16" vertex="1">
+          <mxGeometry height="260" width="762" x="15" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="sourcesubnet" parent="sourcevnet" style="swimlane;startSize=25;rounded=1;fillColor=#F7FAFE;strokeColor=#91B7D9;fontColor=#315B80;fontSize=12;fontStyle=1;html=1;collapsible=0;" value="snet-primary  ·  10.0.0.0/24" vertex="1">
+          <mxGeometry height="212" width="738" x="12" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="vm" parent="sourcesubnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/compute/Virtual_Machine.svg;strokeColor=none;fontSize=13;fontColor=#12304A;labelPerimeter=1;" value="vm-primary&lt;br&gt;Windows Server 2022 · IIS" vertex="1">
+          <mxGeometry height="88" width="88" x="320" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="nic" parent="sourcesubnet" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Network_Interface.svg;fontSize=11;labelPerimeter=1;" value="nic-primary" vertex="1">
+          <mxGeometry height="52" width="58" x="165" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="pip" parent="sourcesubnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Public_IP_Addresses.svg;strokeColor=none;fontSize=11;fontColor=#12304A;labelPerimeter=1;labelBackgroundColor=none;" value="pip-primary" vertex="1">
+          <mxGeometry height="54" width="60" x="55" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="rCDDZYGRLLnt0TtnUnin-1" edge="1" parent="sourcesubnet" source="osdisk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;endArrow=none;endFill=0;dashed=1;" target="vm">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="507" y="64" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="osdisk" parent="sourcesubnet" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Disk_Storage.svg;fontSize=11;labelPerimeter=1;points=[[0,0,1,0,0],[0.25,0,1,0,0],[0.5,0,1,0,0],[0.75,0,1,0,0],[1,0,1,0,0],[0,0.25,1,0,0],[0,0.5,1,0,0],[0,0.75,1,0,0],[1,0.25,1,0,0],[1,0.5,1,0,0],[1,0.75,1,0,0],[0,1,1,0,0],[0.25,1,1,0,0],[0.5,1,1,0,0],[0.75,1,1,0,0],[1,1,1,0,0],[0.609375,0.574074,0,0,0]];" value="disk-primary · OS disk" vertex="1">
+          <mxGeometry height="54" width="64" x="475" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="rCDDZYGRLLnt0TtnUnin-2" edge="1" parent="sourcesubnet" source="datadisk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;endArrow=none;endFill=0;dashed=1;" target="vm">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="647" y="64" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="datadisk" parent="sourcesubnet" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Disk_Storage.svg;fontSize=11;labelPerimeter=1;" value="Data disk · 32 GB" vertex="1">
+          <mxGeometry height="54" width="64" x="615" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="vmnic" edge="1" parent="sourcesubnet" source="vm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2F75B5;endArrow=none;labelBackgroundColor=default;defaultLabelBackgroundColor=page;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="nic">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="194" y="86" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="vmpublic" edge="1" parent="sourcesubnet" source="nic" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;endArrow=none;labelBackgroundColor=default;defaultLabelBackgroundColor=page;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.5;entryX=1;entryY=0.48148148148148145;" target="pip">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="backup" parent="rgprimary" style="swimlane;startSize=28;rounded=1;fillColor=#E7F5EC;strokeColor=#3C9B70;fontColor=#205B43;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="AZURE VM BACKUP" vertex="1">
+          <mxGeometry height="285" width="345" x="20" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="backupvault" parent="backup" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/storage/Recovery_Services_Vaults.svg;strokeColor=none;fontSize=12;fontColor=#12304A;labelPerimeter=1;" value="rsv-backup-primary" vertex="1">
+          <mxGeometry height="65" width="76" x="130" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="backuppolicy" parent="backup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#3C9B70;fontColor=#205B43;fontSize=13;align=center;" value="Daily backup · 30-day retention" vertex="1">
+          <mxGeometry height="58" width="165" x="85" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="recoverypoints" parent="backup" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#3C9B70;fontColor=#205B43;fontSize=12;align=center;" value="Backup recovery points" vertex="1">
+          <mxGeometry height="48" width="165" x="85" y="225" as="geometry" />
+        </mxCell>
+        <mxCell id="policyedge" edge="1" parent="backup" source="backupvault" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3C9B70;endArrow=classic;defaultLabelBackgroundColor=page;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;entryX=0.503030303030303;entryY=0;" target="backuppolicy">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pointedge" edge="1" parent="backup" source="backuppolicy" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3C9B70;endArrow=classic;defaultLabelBackgroundColor=page;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="recoverypoints">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cache" parent="rgprimary" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/storage/Storage_Accounts.svg;strokeColor=none;fontSize=11;fontColor=#12304A;labelPerimeter=1;" value="storageasrcachehm2k · ASR cache" vertex="1">
+          <mxGeometry height="72" width="82" x="535" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="backupedge" edge="1" parent="rgprimary" source="vm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#3C9B70;strokeWidth=2;fontSize=11;fontColor=#205B43;endArrow=classic;defaultLabelBackgroundColor=page;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="backupvault" value="VM backup">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="391" y="395" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="asrcache" edge="1" parent="rgprimary" source="vm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#2F75B5;strokeWidth=2;fontSize=11;fontColor=light-dark(#FFFFFF,#FFFFFF);labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;" target="cache" value="Changed disk data">
+          <mxGeometry relative="1" x="0.226" y="6" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="471" y="160" />
+              <mxPoint x="471" y="476" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="recovery" parent="1" style="swimlane;startSize=34;rounded=1;fillColor=#F3F8F4;strokeColor=#70AD47;fontColor=#375623;fontSize=16;fontStyle=1;html=1;collapsible=0;" value="RECOVERY REGION  ·  CENTRAL US" vertex="1">
+          <mxGeometry height="690" width="820" x="905" y="215" as="geometry" />
+        </mxCell>
+        <mxCell id="rgsecondary" parent="recovery" style="swimlane;startSize=28;rounded=1;fillColor=#F7FAF5;strokeColor=#70AD47;fontColor=#375623;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="rg-recovery-secondary" vertex="1">
+          <mxGeometry height="635" width="792" x="14" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="secondaryvnet" parent="rgsecondary" style="swimlane;startSize=27;rounded=1;fillColor=#E7F5EC;strokeColor=#3C9B70;fontColor=#205B43;fontSize=13;fontStyle=1;html=1;collapsible=0;" value="vnet-secondary  ·  10.1.0.0/16" vertex="1">
+          <mxGeometry height="260" width="762" x="15" y="38" as="geometry" />
+        </mxCell>
+        <mxCell id="secondarySubnet" parent="secondaryvnet" style="swimlane;startSize=25;rounded=1;fillColor=#F7FAFE;strokeColor=#91B7D9;fontColor=#315B80;fontSize=12;fontStyle=1;html=1;collapsible=0;" value="snet-secondary  ·  10.1.0.0/24" vertex="1">
+          <mxGeometry height="212" width="738" x="12" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="testvm" parent="secondarySubnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/compute/Virtual_Machine.svg;strokeColor=none;fontSize=13;fontColor=#12304A;labelPerimeter=1;" value="vm-primary-test · Temporary test VM" vertex="1">
+          <mxGeometry height="88" width="88" x="320" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="testnic" parent="secondarySubnet" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Network_Interface.svg;fontSize=11;labelPerimeter=1;" value="nic-primary-test" vertex="1">
+          <mxGeometry height="52" width="58" x="165" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="testpip" parent="secondarySubnet" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/networking/Public_IP_Addresses.svg;strokeColor=none;fontSize=11;fontColor=#12304A;labelPerimeter=1;labelBackgroundColor=none;" value="&lt;span&gt;pip-primary-test&lt;/span&gt;" vertex="1">
+          <mxGeometry height="54" width="60" x="55" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="testosdisk" parent="secondarySubnet" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Disk_Storage.svg;fontSize=11;labelPerimeter=1;" value="disk-primary-test" vertex="1">
+          <mxGeometry height="54" width="64" x="475" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="testdatadisk" parent="secondarySubnet" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Disk_Storage.svg;fontSize=11;labelPerimeter=1;" value="disk-data-test" vertex="1">
+          <mxGeometry height="54" width="64" x="615" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="testvmnic" edge="1" parent="secondarySubnet" source="testvm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2F75B5;endArrow=none;labelBackgroundColor=default;defaultLabelBackgroundColor=page;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="testnic">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="194" y="86" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="testpublic" edge="1" parent="secondarySubnet" source="testnic" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;endArrow=none;labelBackgroundColor=default;defaultLabelBackgroundColor=page;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.5;entryX=1;entryY=0.48148148148148145;" target="testpip">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rCDDZYGRLLnt0TtnUnin-4" edge="1" parent="secondarySubnet" source="testosdisk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.996;entryY=0.318;entryDx=0;entryDy=0;entryPerimeter=0;defaultLabelBackgroundColor=page;dashed=1;endArrow=none;endFill=0;" target="testvm">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="507" y="70" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rCDDZYGRLLnt0TtnUnin-5" edge="1" parent="secondarySubnet" source="testdatadisk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.004;entryY=0.326;entryDx=0;entryDy=0;entryPerimeter=0;defaultLabelBackgroundColor=page;endArrow=none;endFill=0;dashed=1;" target="testvm">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="647" y="70.7" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="asrvault" parent="rgsecondary" style="image;aspect=fixed;html=1;align=center;verticalLabelPosition=bottom;verticalAlign=top;image=https://app.diagrams.net/img/lib/azure2/storage/Recovery_Services_Vaults.svg;strokeColor=none;fontSize=12;fontColor=#12304A;labelPerimeter=1;" value="rsv-asr-secondary" vertex="1">
+          <mxGeometry height="66" width="76" x="70" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="replicaGroup" parent="rgsecondary" style="swimlane;startSize=54;rounded=1;fillColor=#F0F6FC;strokeColor=#5B9BD5;fontColor=#174A75;fontSize=14;fontStyle=1;html=1;collapsible=0;" value="PERSISTENT ASR DISK REPLICAS&lt;br&gt;Present during ongoing replication" vertex="1">
+          <mxGeometry height="125" width="590" x="95" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="replicaOS" parent="replicaGroup" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Disk_Storage.svg;fontSize=12;labelPerimeter=1;" value="disk-primary-ASRReplica" vertex="1">
+          <mxGeometry height="48" width="58" x="145" y="57" as="geometry" />
+        </mxCell>
+        <mxCell id="replicaData" parent="replicaGroup" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Disk_Storage.svg;fontSize=12;labelPerimeter=1;" value="disk-data-ASRReplica" vertex="1">
+          <mxGeometry height="48" width="58" x="390" y="57" as="geometry" />
+        </mxCell>
+        <mxCell id="replicaNote" parent="replicaGroup" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#526579;strokeColor=none;fillColor=none;" value="Replica disks support failover" vertex="1">
+          <mxGeometry height="20" width="340" x="125" y="71" as="geometry" />
+        </mxCell>
+        <mxCell id="vaultconfig" edge="1" parent="rgsecondary" source="asrvault" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;dashed=1;strokeColor=#8295A8;fontSize=10;fontColor=#526579;defaultLabelBackgroundColor=page;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;entryX=0.4;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="replicaGroup" value="Orchestrates protection">
+          <mxGeometry relative="1" x="-0.4585" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="331" y="403" />
+            </Array>
+            <mxPoint x="261" y="408" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="recoveryflow" edge="1" parent="rgsecondary" source="replicaGroup" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#D6A64A;strokeWidth=2;fontSize=11;fontColor=#5B4517;defaultLabelBackgroundColor=page;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" value="Test failover">
+          <mxGeometry relative="1" x="0.7687" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="385" />
+            </Array>
+            <mxPoint x="389.5" y="495" as="sourcePoint" />
+            <mxPoint x="390.5" y="227" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cachevault" edge="1" parent="1" source="cache" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2F75B5;strokeWidth=2;fontSize=11;fontColor=#FFFFFF;defaultLabelBackgroundColor=page;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;" target="asrvault" value="Cross-region replication">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1027" y="731" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="httpPrimary" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2878B5;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=0;exitY=0.25;entryX=0.35;entryY=0;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="pip" value="HTTP · TCP 80 · Internet">
+          <mxGeometry relative="1" x="-0.0692" y="-1" as="geometry">
+            <mxPoint y="1" as="offset" />
+            <Array as="points">
+              <mxPoint x="152" y="120.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="httpRecovery" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#2878B5;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=0.615;exitY=1.001;entryX=0.35;entryY=0;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;exitPerimeter=0;" target="testpip" value="HTTP · TCP 80&lt;br&gt;Internet">
+          <mxGeometry relative="1" x="0.4504" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="940" y="400" />
+              <mxPoint x="1022" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rdpPrimary" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=0;exitY=0.75;entryX=0.75;entryY=0;labelPlacement=auto;libavoidRouting=1;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="pip" value="RDP · TCP 3389Admin public IPv4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="176" y="161.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rdpRecovery" edge="1" parent="1" source="access" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#9673A6;strokeWidth=2;endArrow=classic;fontSize=12;fontColor=light-dark(#FFFFFF,#FFFFFF);exitX=1;exitY=0.75;entryX=0.75;entryY=0;labelPlacement=auto;orthogonalLoop=1;jettySize=auto;labelBackgroundColor=none;exitDx=0;exitDy=0;" target="testpip" value="RDP · TCP 3389&lt;br&gt;Admin public IPv4">
+          <mxGeometry relative="1" x="0.4325" as="geometry">
+            <mxPoint x="-1" as="offset" />
+            <Array as="points">
+              <mxPoint x="1156" y="161.5" />
+              <mxPoint x="1156" y="400" />
+              <mxPoint x="1046" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
