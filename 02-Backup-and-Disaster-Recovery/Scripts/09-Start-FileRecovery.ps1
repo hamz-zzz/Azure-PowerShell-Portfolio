@@ -7,7 +7,7 @@ $PasswordFile = "$DownloadPath\RecoveryPassword.txt"
 
 # Create Download Directory if it doesn't exist
 if (-not (Test-Path -Path $DownloadPath)) {
-    New-Item -Path $DownloadPath -ItemType Directory
+    New-Item -Path $DownloadPath -ItemType Directory | Out-Null
 }
 
 # Retrieve Recovery Services Vault
