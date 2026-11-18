@@ -22,7 +22,7 @@ foreach ($NetworkSecurityGroup in $NetworkSecurityGroups) {
 
     # Create security rules
     $RDPRule = New-AzNetworkSecurityRuleConfig -Name 'Allow-RDP' -Direction Inbound -Access Allow -SourceAddressPrefix "$AdminPublicIP/32" -SourcePortRange * -DestinationAddressPrefix VirtualNetwork -DestinationPortRange 3389 -Protocol Tcp -Priority 100
-    $HTTPRule = New-AzNetworkSecurityRuleConfig -Name 'Allow-HTTP' -Direction Inbound -Access Allow -SourceAddressPrefix "$AdminPublicIP/32" -SourcePortRange * -DestinationAddressPrefix VirtualNetwork -DestinationPortRange 80 -Protocol Tcp -Priority 110
+    $HTTPRule = New-AzNetworkSecurityRuleConfig -Name 'Allow-HTTP' -Direction Inbound -Access Allow -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix VirtualNetwork -DestinationPortRange 80 -Protocol Tcp -Priority 110
 
     # Create NSG
     $NSG = New-AzNetworkSecurityGroup -Name $NetworkSecurityGroup.Name -ResourceGroupName $NetworkSecurityGroup.ResourceGroup -Location $NetworkSecurityGroup.Location -SecurityRules $RDPRule, $HTTPRule
