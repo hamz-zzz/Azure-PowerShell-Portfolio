@@ -41,7 +41,7 @@ $Action = New-ScheduledTaskAction -Execute 'PowerShell.exe' -Argument '-NoProfil
 $Trigger = New-ScheduledTaskTrigger -AtStartup -RandomDelay (New-TimeSpan -Seconds 60)
 $Principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
 
-Register-ScheduledTask -TaskName 'Update-IISMetadata' -Action $Action -Trigger $Trigger -Principal $Principal -Force
+Register-ScheduledTask -TaskName 'Generate-IISWebpage.ps1' -Action $Action -Trigger $Trigger -Principal $Principal -Force
 
 # Generate Initial Webpage
 & 'C:\Guest-Configs\03-Generate-IISWebpage.ps1'
