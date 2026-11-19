@@ -3,7 +3,7 @@ $ResourceGroupName = 'rg-recovery-secondary'
 $VaultName = 'rsv-asr-secondary'
 $PrimaryFabricName = 'fabric-primary'
 $PrimaryVMName = 'vm-primary'
-$PublicIPName = 'pip-secondary'
+$PublicIPName = 'pip-primary-test'
 $RecoveryVMName = 'vm-primary-test'
 $RecoveryNICName = 'nic-primary-test'
 
