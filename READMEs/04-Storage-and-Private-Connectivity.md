@@ -1,6 +1,6 @@
-# Project 03 - Azure Storage & Private Connectivity
+# Project 04 - Azure Storage & Private Connectivity
 
-![Azure Storage & Private Connectivity](Architecture/03-Storage-Private-Connectivity.png)
+![Architecture](Architecture/04-Storage-and-Private-Connectivity.png)
 
 ## Overview
 
@@ -149,7 +149,7 @@ The Storage Account firewall was tested from two public IP addresses. Requests f
 
 ### Blob request from an approved public IP
 
-![Authorized Blob access from laptop](Screenshots/13-Laptop-Blob-Access-Authorized.png)
+![Authorized Blob access from my laptop](Screenshots/13-Laptop-Blob-Access-Authorized.png)
 
 The firewall allows the approved IP address. The container-level RBAC assignment gives my Entra ID user permission to access Blob data.
 
@@ -265,7 +265,7 @@ Private Link is now the Storage Account's access path. The earlier service endpo
 
 ![Storage public network access disabled](Screenshots/23-Storage-Public-Network-Access-Disabled.png)
 
-AzCopy was used to test the final configuration. From the test VM, the Blob hostname resolves through the `privatelink` CNAME to `10.0.0.5`. The transfer succeeds through the Private Endpoint. Requests from the laptop to the public endpoint are blocked.
+AzCopy was used to test the final configuration. From the test VM, the Blob hostname resolves through the `privatelink` CNAME to `10.0.0.5`. The transfer succeeds through the Private Endpoint. Requests from my laptop to the public endpoint are blocked.
 
 ### AzCopy transfer through the Blob Private Endpoint
 
@@ -277,8 +277,7 @@ This confirms that private DNS resolution, endpoint connectivity, and Blob authe
 
 ![Public endpoint access blocked from my laptop](Screenshots/25-Laptop-AzCopy-Public-Endpoint-Blocked.png)
 
-The laptop resolves the public hostname outside the VNet, where public network access is disabled. The request is therefore blocked.
-
+My laptop resolves the public endpoint instead of the private endpoint. With public network access disabled, the connection fails.
 
 ## Azure Files over SMB
 

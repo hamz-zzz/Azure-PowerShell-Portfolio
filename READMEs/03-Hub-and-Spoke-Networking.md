@@ -1,6 +1,6 @@
-# Project 01 - Azure Hub-and-Spoke Network & Security Architecture
+# Project 03 - Azure Hub-and-Spoke Networking
 
-![Azure Hub-and-Spoke Network & Security Architecture](Architecture/01-Azure-Hub-and-Spoke-Network-Security-Architecture.png)
+![Architecture](Architecture/03-Hub-and-Spoke-Networking.png)
 
 ## Overview
 
