@@ -16,7 +16,7 @@ $PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $Resour
 
 # Associate Public IP with Network Interface
 $NIC.IpConfigurations[0].PublicIpAddress =  $PublicIP
-Set-AzNetworkInterface -NetworkInterface $NIC
+Set-AzNetworkInterface -NetworkInterface $NIC | Out-Null
 
 # Update IIS Webpage
 $Script = "& 'C:\Guest-Configs\03-Generate-IISWebpage.ps1'"
