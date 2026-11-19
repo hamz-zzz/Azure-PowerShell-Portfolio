@@ -10,10 +10,6 @@ $RecoveryNICName = 'nic-primary-test'
 # Retrieve Recovery Services Vault
 $Vault = Get-AzRecoveryServicesVault -Name $VaultName -ResourceGroupName $ResourceGroupName
 
-# Import ASR Vault Settings
-$VaultSettings = Get-AzRecoveryServicesVaultSettingsFile -Vault $Vault -SiteRecovery
-Import-AzRecoveryServicesAsrVaultSettingsFile -Path $VaultSettings.FilePath
-
 # Set ASR Vault Context
 Set-AzRecoveryServicesAsrVaultContext -Vault $Vault
 

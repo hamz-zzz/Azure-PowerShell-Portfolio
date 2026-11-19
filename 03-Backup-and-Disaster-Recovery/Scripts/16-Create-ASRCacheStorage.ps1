@@ -4,7 +4,6 @@ $Location = 'eastus2'
 $StorageAccountName = 'storageasrcachehm2k'
 
 # Create ASR Cache Storage Account
-# Hint: New-AzStorageAccount
 New-AzStorageAccount -Name $StorageAccountName -ResourceGroupName $ResourceGroupName -Location $Location -Kind StorageV2 -SkuName Standard_LRS
 
 # Verify Storage Account
