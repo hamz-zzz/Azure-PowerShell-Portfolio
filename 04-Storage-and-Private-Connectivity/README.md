@@ -4,7 +4,7 @@
 
 ## Overview
 
-This project focuses on securing Azure Blob Storage and Azure Files with Azure PowerShell. It covers storage provisioning, Entra ID authorization, network restrictions, Private Link, SMB access, and data protection.
+This project deploys Azure Blob Storage and Azure Files with restricted network access. It uses Entra ID and managed identity for Blob authorization, Private Endpoints for private connectivity, and SMB for Azure Files access. Blob versioning and soft delete are configured and tested for data recovery.
 
 A Windows Server 2022 VM is deployed in the project network and used to validate private connectivity, Blob access, and Azure Files over SMB.
 

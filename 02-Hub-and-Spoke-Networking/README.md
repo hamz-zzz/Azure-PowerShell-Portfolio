@@ -4,7 +4,7 @@
 
 ## Overview
 
-This project builds a hub-and-spoke network in Azure to centralize traffic inspection and provide secure access to private workloads. Azure Firewall controls outbound traffic, Azure Bastion provides administrative access to the virtual machines, and firewall diagnostics are sent to Log Analytics for monitoring. Windows Server and Ubuntu test VMs are used to validate private connectivity, DNS resolution, and controlled outbound access.
+This project builds a hub-and-spoke network in Azure to centralize traffic inspection and provide secure access to private workloads. Azure Firewall filters and inspects workload traffic, Azure Bastion provides administrative access to the virtual machines, and firewall diagnostics are sent to Log Analytics for monitoring. Windows Server and Ubuntu test VMs are used to validate private connectivity, DNS resolution, and controlled outbound access.
 
 Resources are organized into two resource groups:
 
@@ -232,7 +232,7 @@ Get-AzBastion -Name 'bastion-hub' -ResourceGroupName 'rg-network-hub' | Format-L
 
 ## Firewall diagnostics
 
-`law-network-hub` is created in `rg-network-hub`. Diagnostic setting `diag-azfw-hub` sends the network-rule and application-rule logs from `azfw-hub` to this workspace, making firewall decisions available for review and troubleshooting.
+`law-network-hub` is created in `rg-network-hub`. Diagnostic setting `diag-azfw-hub` sends the network-rule and application-rule logs from `azfw-hub` to this workspace. These logs can be used to review firewall decisions and troubleshoot traffic.
 
 ```powershell
 $Workspace = New-AzOperationalInsightsWorkspace -Name 'law-network-hub' -ResourceGroupName 'rg-network-hub' -Location 'eastus2'
@@ -268,7 +268,7 @@ AZFWApplicationRule
 - [Network rule query](Queries/01-FirewallNetworkRules.kql)
 - [Application rule query](Queries/02-FirewallApplicationRules.kql)
 
-The exported results provide evidence of the firewall's allow and deny decisions. The network-rule export contains 19 events: 11 allowed DNS requests to `1.1.1.1:53` and 8 denied UDP requests to port 123 by the default action. The application-rule export contains 75 HTTPS events: 2 requests to `google.com` matched `rc-workload-app` / `allow-https`, while 73 unmatched requests were denied by the default action. This reflects the intentionally narrow outbound policy rather than unrestricted internet access.
+The exported results provide evidence of the firewall's allow and deny decisions. The network-rule export contains 19 events: 11 allowed DNS requests to `1.1.1.1:53` and 8 denied UDP requests to port 123 by the default action. The application-rule export contains 75 HTTPS events: 2 requests to `google.com` matched `rc-workload-app` / `allow-https`, while 73 unmatched requests were denied by the default action.
 
 **Scripts:** [Create Log Analytics workspace](Scripts/12-Create-LogAnalyticsWorkspace.ps1) · [Configure firewall diagnostics](Scripts/13-Configure-AzureFirewallDiagnostics.ps1)
 

@@ -7,7 +7,7 @@ This project deploys a Windows Server workload in Azure and implements two recov
 - **Azure Backup** for scheduled VM backups and file-level recovery.
 - **Azure Site Recovery (ASR)** for replicating the workload to a secondary region and testing regional recovery.
 
-The scripts cover infrastructure deployment, guest configuration, protection setup, asynchronous job monitoring, recovery validation, and cleanup.
+The project includes scripts for deploying the infrastructure, configuring the VM, setting up backup and replication, monitoring jobs, and testing recovery.
 
 ## Infrastructure
 
@@ -87,7 +87,7 @@ $NSG = New-AzNetworkSecurityGroup -Name $NetworkSecurityGroup.Name -ResourceGrou
 
 The guest configuration prepares the VM for the workload by initializing its data disk and installing IIS. It also configures an IIS page to display the VM's hostname, region, private IP address, and public IP address.
 
-A scheduled task runs at startup under the `SYSTEM` account and refreshes the page automatically. This keeps the displayed details current after a restart or recovery, without requiring an interactive sign-in:
+A scheduled task runs at startup under the `SYSTEM` account and runs `03-Generate-IISWebpage.ps1` to refresh the page. This refreshes the page after a restart or recovery without requiring an interactive sign-in:
 
 ```powershell
 $Action = New-ScheduledTaskAction -Execute 'PowerShell.exe' -Argument '-NoProfile -ExecutionPolicy Bypass -File "C:\Guest-Configs\03-Generate-IISWebpage.ps1"'
@@ -145,7 +145,7 @@ The script converts 23:00 EST to 04:00 UTC before adding the time to the schedul
 
 ### Initial backup orchestration
 
-The initial backup script does more than issue a backup command. Before starting a new operation, it checks whether a backup is already running and whether a recovery point already exists. This prevents an unnecessary duplicate backup:
+Before starting a new backup, the script checks whether one is already running and whether a recovery point already exists. This prevents an unnecessary duplicate backup:
 
 ```powershell
 $Jobs = Get-AzRecoveryServicesBackupJob -Status InProgress -Operation Backup -BackupManagementType AzureVM -VaultId $Vault.Id |
@@ -179,7 +179,7 @@ $JobDetails = Get-AzRecoveryServicesBackupJobDetail -JobId $Job.JobId -VaultId $
 $JobDetails.SubTasks | Format-Table Name, Status, Duration
 ```
 
-After the job finishes, the script checks for `Completed` and retrieves the newest recovery point. This makes the operation state-aware instead of relying on a fixed sleep period.
+After the job finishes, the script checks for `Completed` and retrieves the newest recovery point.
 
 **Backup scripts:** [Create vault](Scripts/06-Create-BackupVault.ps1) · [Configure VM backup](Scripts/07-Configure-VMBackup.ps1) · [Start and monitor initial backup](Scripts/08-Start-InitialBackup.ps1)
 
@@ -304,7 +304,7 @@ $LatestRecoveryPoint = $RecoveryPoints | Sort-Object RecoveryPointTime -Descendi
 $LatestRecoveryPoint | Format-List Name, RecoveryPointType, RecoveryPointTime
 ```
 
-This state-based monitoring confirms that initial replication has completed before proceeding to failover testing.
+The script waits for the protection state to reach `Protected` before proceeding with failover testing.
 
 **Monitoring script:** [Monitor initial replication](Scripts/18-Monitor-InitialReplication.ps1)
 
@@ -342,9 +342,9 @@ if ($Job.State -ne 'Succeeded') {
 }
 ```
 
-The test failover completed successfully and created `vm-primary-test` in Central US with its replicated OS and data disks. A public IP was then associated with the recovered VM's NIC. The page-generation script was run remotely with `Invoke-AzVMRunCommand` to refresh the displayed network details.
+The test failover completed successfully and created `vm-primary-test` in Central US with its replicated OS and data disks. A public IP was then associated with the recovered VM's NIC.
 
-The recovery access script attaches a new public IP to the recovered VM and runs the page-generation script remotely:
+The recovery access script attaches a new public IP to the recovered VM's NIC, then runs `03-Generate-IISWebpage.ps1` remotely:
 
 ```powershell
 $PublicIP = New-AzPublicIpAddress -Name $PublicIPName -ResourceGroupName $ResourceGroupName -Location $Location -AllocationMethod Static
@@ -374,7 +374,7 @@ Invoke-AzVMRunCommand -ResourceGroupName $ResourceGroupName -VMName $VMName -Com
 
 ![Recovered IIS page](Screenshots/35-Test-Failover-IIS-Webpage.png)
 
-The IIS page displayed the recovered VM's hostname (`vm-primary-test`), region (`centralus`), and private and public IP addresses. This confirmed that the scheduled task ran the page-generation script and populated the IIS page with the recovered VM's metadata and public IP.
+The IIS page displayed the recovered VM's hostname (`vm-primary-test`), region (`centralus`), and private and public IP addresses. This confirmed that the scheduled task ran the page-generation script and updated the IIS page with the recovered VM's details.
 
 ## Test failover cleanup
 

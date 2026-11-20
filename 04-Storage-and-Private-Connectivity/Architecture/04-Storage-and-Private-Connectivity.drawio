@@ -1,10 +1,10 @@
 <mxfile host="Electron">
   <diagram name="Page-1" id="page-1">
-    <mxGraphModel dx="1882" dy="946" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0" adaptiveColors="auto">
+    <mxGraphModel dx="1828" dy="951" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0" adaptiveColors="auto">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontColor=#12304A;" value="Project 04 — Azure Storage &amp;amp; Private Connectivity" vertex="1">
+        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=26;fontStyle=1;fontColor=#12304A;" value="4. Azure Storage &amp;amp; Private Connectivity" vertex="1">
           <mxGeometry height="38" width="1400" x="35" y="18" as="geometry" />
         </mxCell>
         <mxCell id="subtitle" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=14;fontColor=#526579;" value="Private storage access from an Azure workload · Public network access disabled" vertex="1">
