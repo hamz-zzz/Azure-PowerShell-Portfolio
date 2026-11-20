@@ -24,7 +24,7 @@ The workload is deployed in East US 2, with Central US configured as the recover
 
 The source workload is `vm-primary`, running Windows Server 2022 on a `Standard_B2s_v2` VM. It uses a Standard SSD OS disk and a separate 32-GB managed data disk so application data can be included in backup and replication testing.
 
-Infrastructure is defined in configuration arrays and deployed with `foreach` loops. This keeps the regional configurations consistent without duplicating deployment logic:
+Infrastructure is defined using arrays of hash tables and deployed with foreach loops. This makes it easier to deploy resources across both regions without repeating configuration code:
 
 ```powershell
 $VirtualNetworks = @(
