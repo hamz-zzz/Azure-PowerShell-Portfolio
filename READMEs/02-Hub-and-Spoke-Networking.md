@@ -1,10 +1,10 @@
-# Project 02 - Azure Hub-and-Spoke Networking
+# 2. Azure Hub-and-Spoke Networking
 
 ![Architecture](Architecture/02-Hub-and-Spoke-Networking.png)
 
 ## Overview
 
-This project builds a hub-and-spoke network in Azure to centralize traffic inspection and provide secure access to private workloads. Azure Firewall controls outbound traffic, Azure Bastion provides administrative access to the virtual machines, and firewall diagnostics are sent to Log Analytics for monitoring. Windows Server and Ubuntu test VMs are used to validate private connectivity, DNS resolution, and controlled outbound access.
+This project builds a hub-and-spoke network in Azure to centralize traffic inspection and provide secure access to private workloads. Azure Firewall filters and inspects workload traffic, Azure Bastion provides administrative access to the virtual machines, and firewall diagnostics are sent to Log Analytics for monitoring. Windows Server and Ubuntu test VMs are used to validate private connectivity, DNS resolution, and controlled outbound access.
 
 Resources are organized into two resource groups:
 
@@ -112,7 +112,7 @@ The Ubuntu script uses `-Linux` in `Set-AzVMOperatingSystem`. Both scripts colle
 
 ## Workload subnet security
 
-`nsg-workload` is associated with `snet-workload` on `vnet-workload`. It controls inbound access to both workload VMs, allowing the required Bastion and internal connectivity while denying other VNet inbound traffic.
+`nsg-workload` is associated with `snet-workload` on `vnet-workload`. It controls inbound access to both workload VMs. The rules allow the required Bastion and internal connectivity but deny other VNet inbound traffic.
 
 | Priority | Rule | Source | Protocol / port | Action |
 |---:|---|---|---|---|
@@ -147,7 +147,7 @@ Set-AzVirtualNetwork -VirtualNetwork $WorkloadVNet
 
 ## Azure Firewall and routing
 
-Azure Firewall Basic (`azfw-hub`) is deployed in `vnet-hub`, using `pip-azfw-hub` for its primary configuration and `pip-azfw-management-hub` for management. Route table `rt-workload` is associated with `snet-workload`. Its `route-to-internet` route sends `0.0.0.0/0` traffic to the firewall's private IP as a virtual appliance:
+Azure Firewall Basic (`azfw-hub`) is deployed in `vnet-hub`. Its primary configuration uses `pip-azfw-hub`, and its management configuration uses `pip-azfw-management-hub`. Route table `rt-workload` is associated with `snet-workload`. Its `route-to-internet` route sends `0.0.0.0/0` traffic to the firewall's private IP as a virtual appliance:
 
 Both public IP resources are created before `azfw-hub`:
 
@@ -217,7 +217,7 @@ Set-AzFirewall -AzureFirewall $Firewall
 
 ## Azure Bastion
 
-Azure Bastion Basic (`bastion-hub`) is deployed in `AzureBastionSubnet` on `vnet-hub`, using Standard static public IP `pip-bastion-hub`. It provides RDP access to `vm-windows01` and SSH access to `vm-ubuntu01`. Neither VM has a public IP:
+Azure Bastion Basic (`bastion-hub`) is deployed in `AzureBastionSubnet` on `vnet-hub`. It uses Standard static public IP `pip-bastion-hub` and provides RDP access to `vm-windows01` and SSH access to `vm-ubuntu01`. Neither VM has a public IP:
 
 ```powershell
 $PublicIP = New-AzPublicIpAddress -Name 'pip-bastion-hub' -ResourceGroupName 'rg-network-hub' -Location 'eastus2' -Sku Standard -AllocationMethod Static
@@ -232,7 +232,7 @@ Get-AzBastion -Name 'bastion-hub' -ResourceGroupName 'rg-network-hub' | Format-L
 
 ## Firewall diagnostics
 
-`law-network-hub` is created in `rg-network-hub`. Diagnostic setting `diag-azfw-hub` sends the network-rule and application-rule logs from `azfw-hub` to this workspace, making firewall decisions available for review and troubleshooting.
+`law-network-hub` is created in `rg-network-hub`. Diagnostic setting `diag-azfw-hub` sends the network-rule and application-rule logs from `azfw-hub` to this workspace. These logs can be used to review firewall decisions and troubleshoot traffic.
 
 ```powershell
 $Workspace = New-AzOperationalInsightsWorkspace -Name 'law-network-hub' -ResourceGroupName 'rg-network-hub' -Location 'eastus2'
@@ -268,7 +268,7 @@ AZFWApplicationRule
 - [Network rule query](Queries/01-FirewallNetworkRules.kql)
 - [Application rule query](Queries/02-FirewallApplicationRules.kql)
 
-The exported results provide evidence of the firewall's allow and deny decisions. The network-rule export contains 19 events: 11 allowed DNS requests to `1.1.1.1:53` and 8 denied UDP requests to port 123 by the default action. The application-rule export contains 75 HTTPS events: 2 requests to `google.com` matched `rc-workload-app` / `allow-https`, while 73 unmatched requests were denied by the default action. This reflects the intentionally narrow outbound policy rather than unrestricted internet access.
+The exported results provide evidence of the firewall's allow and deny decisions. The network-rule export contains 19 events: 11 allowed DNS requests to `1.1.1.1:53` and 8 denied UDP requests to port 123 by the default action. The application-rule export contains 75 HTTPS events: 2 requests to `google.com` matched `rc-workload-app` / `allow-https`, while 73 unmatched requests were denied by the default action.
 
 **Scripts:** [Create Log Analytics workspace](Scripts/12-Create-LogAnalyticsWorkspace.ps1) · [Configure firewall diagnostics](Scripts/13-Configure-AzureFirewallDiagnostics.ps1)
 

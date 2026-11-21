@@ -1,4 +1,4 @@
-# Project 02 - Azure Hub-and-Spoke Networking
+# 2. Azure Hub-and-Spoke Networking
 
 ![Architecture](Architecture/02-Hub-and-Spoke-Networking.png)
 
@@ -112,7 +112,7 @@ The Ubuntu script uses `-Linux` in `Set-AzVMOperatingSystem`. Both scripts colle
 
 ## Workload subnet security
 
-`nsg-workload` is associated with `snet-workload` on `vnet-workload`. It controls inbound access to both workload VMs, allowing the required Bastion and internal connectivity while denying other VNet inbound traffic.
+`nsg-workload` is associated with `snet-workload` on `vnet-workload`. It controls inbound access to both workload VMs. The rules allow the required Bastion and internal connectivity but deny other VNet inbound traffic.
 
 | Priority | Rule | Source | Protocol / port | Action |
 |---:|---|---|---|---|
@@ -147,7 +147,7 @@ Set-AzVirtualNetwork -VirtualNetwork $WorkloadVNet
 
 ## Azure Firewall and routing
 
-Azure Firewall Basic (`azfw-hub`) is deployed in `vnet-hub`, using `pip-azfw-hub` for its primary configuration and `pip-azfw-management-hub` for management. Route table `rt-workload` is associated with `snet-workload`. Its `route-to-internet` route sends `0.0.0.0/0` traffic to the firewall's private IP as a virtual appliance:
+Azure Firewall Basic (`azfw-hub`) is deployed in `vnet-hub`. Its primary configuration uses `pip-azfw-hub`, and its management configuration uses `pip-azfw-management-hub`. Route table `rt-workload` is associated with `snet-workload`. Its `route-to-internet` route sends `0.0.0.0/0` traffic to the firewall's private IP as a virtual appliance:
 
 Both public IP resources are created before `azfw-hub`:
 
@@ -217,7 +217,7 @@ Set-AzFirewall -AzureFirewall $Firewall
 
 ## Azure Bastion
 
-Azure Bastion Basic (`bastion-hub`) is deployed in `AzureBastionSubnet` on `vnet-hub`, using Standard static public IP `pip-bastion-hub`. It provides RDP access to `vm-windows01` and SSH access to `vm-ubuntu01`. Neither VM has a public IP:
+Azure Bastion Basic (`bastion-hub`) is deployed in `AzureBastionSubnet` on `vnet-hub`. It uses Standard static public IP `pip-bastion-hub` and provides RDP access to `vm-windows01` and SSH access to `vm-ubuntu01`. Neither VM has a public IP:
 
 ```powershell
 $PublicIP = New-AzPublicIpAddress -Name 'pip-bastion-hub' -ResourceGroupName 'rg-network-hub' -Location 'eastus2' -Sku Standard -AllocationMethod Static

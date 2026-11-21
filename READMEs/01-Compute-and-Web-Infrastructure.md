@@ -1,4 +1,4 @@
-# Project 01  -  Azure Compute & Web Infrastructure
+# 1. Azure Compute & Web Infrastructure
 
 ![Architecture](Architecture/01-Compute-and-Web-Infrastructure.png)
 
@@ -77,7 +77,7 @@ Four VMs provide two independent web backends:
 | `vm-web-linux01` | `nic-web-linux01` | `osdisk-web-linux01` | Ubuntu Server 24.04 LTS | `Standard_B2ts_v2` | `10.0.0.6` |
 | `vm-web-linux02` | `nic-web-linux02` | `osdisk-web-linux02` | Ubuntu Server 24.04 LTS | `Standard_B2ts_v2` | `10.0.0.7` |
 
-Two VMs per operating system provide a pair of backend instances for load distribution and failover testing. I included both Windows and Linux to apply the same Azure networking and load-balancing design to two platforms, using IIS on Windows and NGINX on Ubuntu.
+Two VMs per operating system provide a pair of backend instances for load distribution and failover testing. I included both Windows and Linux so the same Azure networking and load-balancing design could be applied to two platforms. Windows runs IIS, and Ubuntu runs NGINX.
 
 The VMs use Standard SSD managed OS disks and Microsoft-managed Boot Diagnostics. Credentials are collected at runtime with `Get-Credential`.
 
@@ -405,7 +405,7 @@ The NAT mappings were validated by connecting to each VM through its Load Balanc
 
 The public DNS zone `systemsbyhamza.com` is hosted in Azure DNS. The domain is registered through AWS Route 53, with its nameservers delegated to Azure DNS. Route 53 handles domain registration while Azure DNS hosts and answers the public DNS records.
 
-A records provide easy-to-remember hostnames for the sites instead of requiring users to enter public IP addresses. Both records point to the Load Balancer frontends, keeping the VM addresses private.
+A records provide easy-to-remember hostnames for the sites instead of requiring users to enter public IP addresses. Both records point to the Load Balancer frontends, so the VM addresses remain private.
 
 | Record | Type | Destination |
 |---|---|---|

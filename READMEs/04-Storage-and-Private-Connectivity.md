@@ -1,4 +1,4 @@
-# Project 04 - Azure Storage & Private Connectivity
+# 4. Azure Storage & Private Connectivity
 
 ![Architecture](Architecture/04-Storage-and-Private-Connectivity.png)
 

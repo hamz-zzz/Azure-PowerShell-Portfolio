@@ -1,4 +1,4 @@
-# Project 03 - Azure Backup and Disaster Recovery
+# 3. Azure Backup and Disaster Recovery
 
 ![Architecture](Architecture/03-Backup-and-Disaster-Recovery.png)
 
@@ -11,7 +11,7 @@ The project includes scripts for deploying the infrastructure, configuring the V
 
 ## Infrastructure
 
-The workload is deployed in East US 2, with Central US configured as the recovery region.
+The workload is deployed in East US 2, and Central US is the recovery region.
 
 | Component | Primary | Recovery |
 |---|---|---|
@@ -22,7 +22,7 @@ The workload is deployed in East US 2, with Central US configured as the recover
 | Subnet | `snet-primary` (`10.0.0.0/24`) | `snet-secondary` (`10.1.0.0/24`) |
 | Network security group | `nsg-primary` | `nsg-secondary` |
 
-The source workload is `vm-primary`, running Windows Server 2022 on a `Standard_B2s_v2` VM. It uses a Standard SSD OS disk and a separate 32-GB managed data disk so application data can be included in backup and replication testing.
+The source workload is `vm-primary`, a Windows Server 2022 VM with a `Standard_B2s_v2` size. It uses a Standard SSD OS disk and a separate 32-GB managed data disk so application data can be included in backup and replication testing.
 
 Infrastructure is defined using arrays of hash tables and deployed with foreach loops. This makes it easier to deploy resources across both regions without repeating configuration code:
 
@@ -52,7 +52,7 @@ foreach ($VirtualNetwork in $VirtualNetworks) {
 }
 ```
 
-The NSG deployment follows the same configuration-driven pattern. It retrieves my public IP and creates two inbound rules: RDP (TCP/3389), restricted to my public IP address using a /32 prefix, and HTTP (TCP/80), allowed from the Internet. Each NSG is then associated with its corresponding subnet.
+The NSG deployment follows the same configuration-driven pattern. It retrieves my public IP and creates two inbound rules. The RDP rule (TCP/3389) is restricted to my public IP address with a /32 prefix, while the HTTP rule (TCP/80) allows traffic from the Internet. Each NSG is then associated with its corresponding subnet.
 
 The rules are created once per NSG configuration and applied to the matching subnet:
 
@@ -145,7 +145,7 @@ The script converts 23:00 EST to 04:00 UTC before adding the time to the schedul
 
 ### Initial backup orchestration
 
-Before starting a new backup, the script checks whether one is already running and whether a recovery point already exists. This prevents an unnecessary duplicate backup:
+Before the script starts a new backup, it checks whether one is already running and whether a recovery point already exists. This prevents an unnecessary duplicate backup:
 
 ```powershell
 $Jobs = Get-AzRecoveryServicesBackupJob -Status InProgress -Operation Backup -BackupManagementType AzureVM -VaultId $Vault.Id |
@@ -310,7 +310,7 @@ The script waits for the protection state to reach `Protected` before proceeding
 
 ## Test failover
 
-With replication established, a test failover was initiated from the primary fabric using the latest available recovery point and `vnet-secondary` as the recovery network.
+After replication was established, a test failover was initiated from the primary fabric. It used the latest available recovery point and `vnet-secondary` as the recovery network.
 
 The script retrieves the protected item, selects the newest recovery point, and starts the ASR test failover:
 
