@@ -2,11 +2,11 @@
 
 ## Introduction
 
-As part of my interest in IT and networking, I wanted to learn more about cloud computing. I started learning AWS earlier in the year and later decided to expand my knowledge to Azure. Before getting into Azure, I spent the summer learning PowerShell by reading Learn PowerShell in a Month of Lunches and Learn PowerShell Scripting in a Month of Lunches. I wanted to get comfortable with PowerShell before using it with Azure. With help from courses by John Savill and Alan Rodrigues, along with hands-on labs, I studied for and passed the Azure Administrator (AZ-104) exam.
+As part of my interest in IT and networking, I wanted to learn more about cloud computing. I started with AWS and later expanded my knowledge to Azure. Before working with Azure, I spent the summer learning PowerShell through *Learn PowerShell in a Month of Lunches* and *Learn PowerShell Scripting in a Month of Lunches*. With help from courses by John Savill and Alan Rodrigues, along with hands-on labs, I passed the Azure Administrator (AZ-104) exam.
 
-After passing the AZ-104 exam, I took Alan Rodrigues' Azure PowerShell course on Udemy. Choosing his course was an easy decision since I had also used his AZ-104 course to prepare for the exam. I saw it as a way to review both the PowerShell and Azure concepts I had learned and get more comfortable using them together. The course gave me the idea to build these projects using Azure PowerShell.
+After passing AZ-104, I took Alan Rodrigues' Azure PowerShell course on Udemy. I wanted to review the PowerShell and Azure concepts I had learned and get more comfortable using them together. This inspired me to build these projects entirely through Azure PowerShell.
 
-This repository brings together four projects covering compute, networking, backup and disaster recovery, and storage. Each project documents the resources deployed, how they were configured, and how they were tested.
+This repository contains four projects covering compute, networking, backup and disaster recovery, and storage. I used Azure PowerShell to deploy and configure the resources, manage their settings, and test the resulting infrastructure.
 
 ## Projects
 
