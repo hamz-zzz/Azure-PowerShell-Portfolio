@@ -2,11 +2,11 @@
 
 ## Introduction
 
-As part of my broader interest in IT and networking, I wanted to develop a solid understanding of cloud computing. Earlier in the year, I started learning AWS and later decided to expand my knowledge to Azure. Before diving into Azure, I spent the summer learning PowerShell by reading *Learn PowerShell in a Month of Lunches* and *Learn PowerShell Scripting in a Month of Lunches*. My goal was to build a foundation in PowerShell before working with Azure. After countless hours of studying and hands-on labs with the help of great courses from John Savill and Alan Rodrigues, I passed the Azure Administrator (AZ-104) exam in October 2026.
+As part of my interest in IT and networking, I wanted to learn more about cloud computing. I started learning AWS earlier in the year and later decided to expand my knowledge to Azure. Before getting into Azure, I spent the summer learning PowerShell by reading Learn PowerShell in a Month of Lunches and Learn PowerShell Scripting in a Month of Lunches. I wanted to get comfortable with PowerShell before using it with Azure. With help from courses by John Savill and Alan Rodrigues, along with hands-on labs, I studied for and passed the Azure Administrator (AZ-104) exam.
 
-After passing the AZ-104 exam, I took Alan Rodrigues' Azure PowerShell course on Udemy. I saw it as an opportunity to connect the PowerShell fundamentals I had learned with the Azure concepts I had studied. I was also already familiar with his teaching style from his AZ-104 course. The course gave me the idea to build these projects using Azure PowerShell rather than relying on the Azure Portal.
+After passing the AZ-104 exam, I took Alan Rodrigues' Azure PowerShell course on Udemy. Choosing his course was an easy decision since I had also used his AZ-104 course to prepare for the exam. I saw it as a way to review both the PowerShell and Azure concepts I had learned and get more comfortable using them together. The course gave me the idea to build these projects using Azure PowerShell.
 
-This repository brings together four projects covering compute, networking, backup and disaster recovery, and storage. Each project documents the resources deployed, how they were configured, and the testing carried out.
+This repository brings together four projects covering compute, networking, backup and disaster recovery, and storage. Each project documents the resources deployed, how they were configured, and how they were tested.
 
 ## Projects
 
